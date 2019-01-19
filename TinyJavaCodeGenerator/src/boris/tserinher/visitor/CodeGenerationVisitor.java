@@ -126,6 +126,8 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		visit(ctx.getChild(1)); //Generate RHS code
 		//int index = currentMethod.getIndexOf(lhs);
 		//currentMethod.addInstruction(ISTORE,index);
+		System.out.println("ASSIGNMETN STATEMENT");
+		System.out.println(ctx.getText());
 		return null;
 		//return super.visitAssignmentStatement(ctx);
 	}
