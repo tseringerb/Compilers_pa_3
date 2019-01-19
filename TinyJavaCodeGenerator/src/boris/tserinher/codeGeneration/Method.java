@@ -8,10 +8,9 @@ import java.util.Map;
 import boris.tserinher.instructions.Instruction;
 
 public class Method {
-	private List<String> variablesList = new ArrayList<>();
-	private List<Instruction> instructions = new ArrayList<>();
-	
-	private Map<String, Integer> nameToIndex = new HashMap<>();
+	public List<String> variablesList = new ArrayList<>();
+	public List<Instruction> instructions = new ArrayList<>();
+	public Map<String, Integer> nameToIndex = new HashMap<>();
 	
 	private int programCounter = 0; //next instruction to be executed
 	
@@ -27,10 +26,8 @@ public class Method {
 		this.variablesList = variablesList;
 	}
 	
-	private class Variable{
-		
+	private class Variable{	
 		private String id;
-		
 	}
 	
 }

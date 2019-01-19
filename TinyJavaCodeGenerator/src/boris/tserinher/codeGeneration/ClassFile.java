@@ -17,6 +17,4 @@ public class ClassFile implements Serializable {
 			System.out.printf("Method Name: %s%n", methodName);
 		});
 	}
-
-	
 }
