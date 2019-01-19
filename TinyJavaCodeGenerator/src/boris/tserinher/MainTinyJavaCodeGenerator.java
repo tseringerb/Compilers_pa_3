@@ -26,7 +26,7 @@ public class MainTinyJavaCodeGenerator {
 		MiniJavaGrammarParser parser = new MiniJavaGrammarParser(new BufferedTokenStream(lexer));		 
 		MiniJavaGrammarParser.StartContext tree = parser.start();
 		
-		//Trees.inspect(tree, parser);
+		Trees.inspect(tree, parser);
 		
 		MiniJavaSymbolTable miniJavaSymbolTable = new MiniJavaSymbolTable();
 		ParseTreeWalker walker = new ParseTreeWalker();
