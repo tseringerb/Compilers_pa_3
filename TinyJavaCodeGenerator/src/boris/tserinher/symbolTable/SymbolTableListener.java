@@ -43,7 +43,6 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 
 	@Override
 	public void enterMainClass(MainClassContext ctx) {
-		
 		String id = ctx.getChild(1).toString();
 		String type = ctx.getChild(0).toString();
 		
@@ -73,6 +72,7 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		symbolTable.setCurrentScopeName(id);
 		symbolTable.putRecord(id, currentClass);
 		super.enterClassDeclaration(ctx);
+
 	}
 
 	@Override

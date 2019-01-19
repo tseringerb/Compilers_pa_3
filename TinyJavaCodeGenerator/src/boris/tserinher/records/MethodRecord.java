@@ -1,6 +1,8 @@
 package boris.tserinher.records;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MethodRecord extends Record {
 
@@ -21,5 +23,13 @@ public class MethodRecord extends Record {
 		parametersList.forEach((id, record)->{
 			System.out.format("Parameter: %s \n", record);
 		});
+	}
+
+	public List<String> getLocals() {
+		List<String> locals = new ArrayList<>();
+		parametersList.forEach((id, varRecord)->{
+			locals.add(varRecord.getId());
+		});
+		return locals;
 	}
 }

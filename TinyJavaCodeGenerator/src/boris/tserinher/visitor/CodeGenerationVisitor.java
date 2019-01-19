@@ -1,7 +1,5 @@
 package boris.tserinher.visitor;
 
-import java.lang.reflect.Method;
-
 import boris.tserinher.MiniJavaGrammarBaseVisitor;
 import boris.tserinher.MiniJavaGrammarParser.AndExpressionContext;
 import boris.tserinher.MiniJavaGrammarParser.AssignmentStatementContext;
@@ -28,16 +26,24 @@ import boris.tserinher.MiniJavaGrammarParser.ReturnStatementContext;
 import boris.tserinher.MiniJavaGrammarParser.StartContext;
 import boris.tserinher.MiniJavaGrammarParser.WhileStatementContext;
 import boris.tserinher.codeGeneration.ClassFile;
+import boris.tserinher.codeGeneration.Method;
+import boris.tserinher.records.MethodRecord;
 import boris.tserinher.records.Record;
+import boris.tserinher.symbolTable.MiniJavaSymbolTable;
 import boris.tserinher.symbolTable.SymbolTable;
 
 public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	
-	private SymbolTable symtab; //From previous iteration
+	private MiniJavaSymbolTable symtab; //From previous iteration
 	private Method currentMethod; //See visitMethodDecl()
 	private String currentClass; //See visitClassDecl()
-	private ClassFile classfile; //To be saved on disk
+	private ClassFile classFile; //To be saved on disk
 	
+	public CodeGenerationVisitor(SymbolTable symtab) {
+		super();
+		this.symtab = (MiniJavaSymbolTable) symtab;
+	}
+
 	@Override
 	public Record visitLessExpression(LessExpressionContext ctx) {
 		// TODO Auto-generated method stub
@@ -55,8 +61,29 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 	@Override
 	public Record visitMethod(MethodContext ctx) {
-		// TODO Auto-generated method stub
-		return super.visitMethod(ctx);
+		String currentMethodName = ctx.getChild(1).getText(); //Method name
+		//System.out.println("Current Method: " + currentMethodName);
+		//System.out.println("Visit method "+ currentMethodName + " CurrentScopeName: " + symtab.getCurrentScopeName());
+		//symtab.enterScope();
+		//System.out.println("Current Method Scope: " + symtab.getCurrentScopeName());
+		//TODO !!!! вызов ниже это костыль, потому что я не понимаю почему при вызове enterScope в классах мы не заходим в нижний Scope 
+		symtab.enterScope();
+		//System.out.println(symtab.getCurrentScopeName());
+		//System.out.println("Records" + symtab.getRecords());
+		MethodRecord mrec = (MethodRecord)symtab.lookup(currentMethodName);
+		//System.out.println("SYMTAB " + symtab);
+		//System.out.println("MREC " + mrec);
+		currentMethod = classFile.addMethod(currentClass + "." + currentMethodName); // New Method!
+		currentMethod.setVariablesList(mrec.getLocals());
+		
+		//visit(ctx.getChild(3));
+		//return null; //super.visitMethod(ctx);
+		
+		 // Add variable array symtab.enterScope();
+		//visit(node.getChild(2)); // generate ParamDeclList code
+		//visit(node.getChild(3)); // generate MethodBody code
+		symtab.exitScope();
+		return null;
 	}
 	@Override
 	public Record visitPrintStatement(PrintStatementContext ctx) {
@@ -70,7 +97,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 	@Override
 	public Record visitParametersList(ParametersListContext ctx) {
-		// TODO Auto-generated method stub
+		System.out.println("Parametr list " + ctx.getText());
 		return super.visitParametersList(ctx);
 	}
 	@Override
@@ -85,8 +112,13 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 	@Override
 	public Record visitMainClass(MainClassContext ctx) {
-		// TODO Auto-generated method stub
-		return super.visitMainClass(ctx);
+		currentClass = ctx.getChild(1).getText();
+		System.out.println("Current class: " + currentClass);
+		System.out.println("Visit main Class CurrentScopeName: " + symtab.getCurrentScopeName());
+		symtab.enterScope();
+		visit(ctx.getChild(3));
+		symtab.exitScope();
+		return null;//super.visitMainClass(ctx);
 	}
 	@Override
 	public Record visitAssignmentStatement(AssignmentStatementContext ctx) {
@@ -115,8 +147,13 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 	@Override
 	public Record visitClassDeclaration(ClassDeclarationContext ctx) {
-		// TODO Auto-generated method stub
-		return super.visitClassDeclaration(ctx);
+		currentClass = ctx.getChild(1).getText();
+		System.out.println("Current class: " + currentClass);
+		System.out.println("Visit class Declar CurrentScope: " + symtab.getCurrentScopeName());
+		symtab.enterScope();
+		visit(ctx.getChild(3));
+		symtab.exitScope();
+		return null; //super.visitClassDeclaration(ctx);
 	}
 	@Override
 	public Record visitAndExpression(AndExpressionContext ctx) {
@@ -140,13 +177,23 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 	@Override
 	public Record visitMainMethod(MainMethodContext ctx) {
-		// TODO Auto-generated method stub
-		return super.visitMainMethod(ctx);
+		String currentMethodName = ctx.getChild(3).getText();
+		System.out.println("Current Method: " + currentMethodName);
+		System.out.println("Visit main method CurrentScope:" + symtab.getCurrentScopeName());
+		currentMethod = new Method();
+		//System.out.println(ctx.getChild(11).getText());
+		symtab.enterScope();
+		visit(ctx.getChild(11));
+		symtab.exitScope();
+		return null; //super.visitMainMethod(ctx);
 	}
 	@Override
 	public Record visitStart(StartContext ctx) {
-		// TODO Auto-generated method stub
-		return super.visitStart(ctx);
+		classFile = new ClassFile();
+		System.out.println("Visit start CurrentScope: " + symtab.getCurrentScopeName());
+		symtab.enterScope();
+		visit(ctx.getChild(0));
+		return null; //super.visitStart(ctx);
 	}
 	@Override
 	public Record visitWhileStatement(WhileStatementContext ctx) {

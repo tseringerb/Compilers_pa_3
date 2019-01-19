@@ -15,6 +15,10 @@ public class MiniJavaSymbolTable implements SymbolTable {
 		this.rootScope = new Scope(null);
 		this.currentScope = rootScope;
 	}
+	
+	public HashMap<String, Record> getRecords(){
+		return currentScope.getRecords();
+	}
 
 	public void setCurrentScopeType(String scopeType){
 		currentScope.setScopeType(scopeType);
@@ -58,11 +62,13 @@ public class MiniJavaSymbolTable implements SymbolTable {
 
 	@Override
 	public void putRecord(String id, Record record) {
+		//System.out.println("PutRecord SymTab" + id + " " + record.getType());
 		currentScope.putRecord(id, record);
 	}
 
 	@Override
-	public Record lookup(String id) {		
+	public Record lookup(String id) {
+		//System.out.println("Method lookup " + currentScope.scopeName + " " + currentScope.scopeType);
 		return currentScope.lookup(id);
 	}
 	
@@ -109,21 +115,30 @@ public class MiniJavaSymbolTable implements SymbolTable {
 			else //Child exists
 			nextChild = (Scope) scopeChildrenList.get(next); // ==> visit child
 			next++;
+			//System.out.println("NEXT CHILD " + nextChild.scopeName);
 			return nextChild;
+		}
+		
+		public HashMap<String, Record> getRecords(){
+			return records;
 		}
 		
 		
 		
 		public Record lookup(String id) {
-			if (records.containsKey(id)) //Check if in current scope
+			//System.out.println("Record method Lookup");
+			//System.out.println("RECORDS " + records.size());
+			if (records.containsKey(id)){ //Check if in current scope
+				//System.out.println("IF true: " + records.containsKey(id));
 				return (Record) records.get(id);
-			else { //Move to enclosing/parent scope
-			if (parentScope == null){
-					return null; // Identifier not in table
 			}
+			else { //System.out.println("ELSE");//Move to enclosing/parent scope
+				if (parentScope == null){
+					return null; // Identifier not in table
+				}
 				else
 					return parentScope.lookup(id); // Delegate request to enclosing scope
-			}
+				}
 		}
 		
 		public void resetScope() { // Must be called after each traversal
@@ -151,4 +166,5 @@ public class MiniJavaSymbolTable implements SymbolTable {
 			
 		}
 	}
+
 }
