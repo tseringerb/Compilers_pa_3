@@ -48,16 +48,33 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitLessExpression(LessExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); // first factor code
+		for(int i= 2; i < numChildren; i+=2){
+			visit(ctx.getChild(i));
+			currentMethod.addInstruction(new Instruction(ILT, null));
+		}		
+		return null;*/
 		return super.visitLessExpression(ctx);
 	}
 	@Override
 	public Record visitNotExpression(NotExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*visit(ctx.getChild(1));
+		currentMethod.addInstruction(new Instruction(INOT, null));
+		return null;*/
 		return super.visitNotExpression(ctx);
 	}
 	@Override
 	public Record visitEqualExpression(EqualExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); // first factor code
+		for(int i= 2; i < numChildren; i+=2){
+			visit(ctx.getChild(i));
+			currentMethod.addInstruction(new Instruction(IEQ, null));
+		}		
+		return null;*/
 		return super.visitEqualExpression(ctx);
 	}
 	@Override
@@ -86,6 +103,9 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitPrintStatement(PrintStatementContext ctx) {
 		// TODO Auto-generated method stub
+		/*visit(ctx.getChild(2)); // visit inside print
+		currentMethod.addInstruction(new Instruction(PRINT,null));
+		return null;*/
 		return super.visitPrintStatement(ctx);
 	}
 	@Override
@@ -103,11 +123,33 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitIfStatment(IfStatmentContext ctx) {
 		// TODO Auto-generated method stub
+		/*visit(ctx.getChild(2)); // generate condition		
+		int iflabel = currentMethod.getIndex();
+		currentMethod.addInstruction(new Instruction(IF_FALSE, null));
+		visit(ctx.getChild(4)); // generate if body
+		Instruction instr = currentMethod.getInstruction(iflabel);
+		instr.setArgument(currentMethod.getIndex()+1); // update if_false
+		
+		int gotolabel = currentMethod.getIndex(); // save goto
+		currentMethod.addInstruction(new Instruction(GOTO, null));
+		if(ctx.getChild(6) != null){
+			visit(ctx.getChild(6)); // generate if else body
+			instr = currentMethod.getInstruction(gotolabel);
+			instr.setArgument(currentMethod.getIndex());
+		}
+		return null;*/
 		return super.visitIfStatment(ctx);
 	}
 	@Override
 	public Record visitMinusExpression(MinusExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); // first factor code
+		for(int i= 2; i < numChildren; i+=2){
+			visit(ctx.getChild(i));
+			currentMethod.addInstruction(new Instruction(ISUB, null));
+		}
+		return null;*/
 		return super.visitMinusExpression(ctx);
 	}
 	@Override
@@ -139,6 +181,13 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitDivExpression(DivExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); // first factor code
+		for(int i= 2; i < numChildren; i+=2){
+			visit(ctx.getChild(i));
+			currentMethod.addInstruction(new Instruction(IDIV, null));
+		}
+		return null;*/
 		return super.visitDivExpression(ctx);
 	}
 	@Override
@@ -165,6 +214,19 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitAndExpression(AndExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); // first factor code
+		for(int i= 2; i < numChildren; i+=2){
+			visit(ctx.getChild(i));
+			if(ctx.getChild(i-1).toString().equals("&&")){
+				currentMethod.addInstruction(new Instruction(IAND, null));
+			}else if(ctx.getChild(i-1).toString().equals("||")){
+				currentMethod.addInstruction(new Instruction(IOR, null));
+			}else{
+				System.out.println("ERROR ERROR ERROR");
+			}
+		}		
+		return null;*/
 		return super.visitAndExpression(ctx);
 	}
 	@Override
@@ -176,11 +238,25 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitMultExpression(MultExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); // first factor code
+		for(int i= 2; i < numChildren; i+=2){
+			visit(ctx.getChild(i));
+			currentMethod.addInstruction(new Instruction(IMUL, null));
+		}
+		return null;*/
 		return super.visitMultExpression(ctx);
 	}
 	@Override
 	public Record visitPlusExpression(PlusExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); // first factor code
+		for(int i= 2; i < numChildren; i+=2){
+			visit(ctx.getChild(i));
+			currentMethod.addInstruction(new Instruction(IADD, null));
+		}
+		return null;*/
 		return super.visitPlusExpression(ctx);
 	}
 	@Override
@@ -206,11 +282,37 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitWhileStatement(WhileStatementContext ctx) {
 		// TODO Auto-generated method stub
+		/*int whilelabel = currentMethod.getIndex();
+		visit(ctx.getChild(2)); // generate condition	
+		int iffalse = currentMethod.getIndex();
+		currentMethod.addInstruction(new Instruction(IF_FALSE, null));
+		visit(ctx.getChild(4)); // generate while body				
+		Instruction instr = currentMethod.getInstruction(iffalse);
+		instr.setArgument(currentMethod.getIndex()+1); // update if_false
+		
+		int gotolabel = currentMethod.getIndex();
+		currentMethod.addInstruction(new Instruction(GOTO, null));
+		instr = currentMethod.getInstruction(gotolabel);
+		instr.setArgument(whilelabel);
+		return null;*/
 		return super.visitWhileStatement(ctx);
 	}
 	@Override
 	public Record visitOrExpression(OrExpressionContext ctx) {
 		// TODO Auto-generated method stub
+		/*int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); // first factor code
+		for(int i= 2; i < numChildren; i+=2){
+			visit(ctx.getChild(i));
+			if(ctx.getChild(i-1).toString().equals("&&")){
+				currentMethod.addInstruction(new Instruction(IAND, null));
+			}else if(ctx.getChild(i-1).toString().equals("||")){
+				currentMethod.addInstruction(new Instruction(IOR, null));
+			}else{
+				System.out.println("ERROR ERROR ERROR");
+			}
+		}		
+		return null;*/
 		return super.visitOrExpression(ctx);
 	}
 
