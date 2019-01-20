@@ -17,4 +17,9 @@ public class ClassFile implements Serializable {
 			System.out.printf("Method Name: %s%n", methodName);
 		});
 	}
+
+	public Method addMethod(String string, Method currentMethod) {
+		methodsList.put(string, currentMethod);
+		return methodsList.get(string);
+	}
 }

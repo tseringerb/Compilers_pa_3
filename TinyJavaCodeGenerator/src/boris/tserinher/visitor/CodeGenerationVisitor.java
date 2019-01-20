@@ -28,6 +28,8 @@ import boris.tserinher.MiniJavaGrammarParser.StartContext;
 import boris.tserinher.MiniJavaGrammarParser.WhileStatementContext;
 import boris.tserinher.codeGeneration.ClassFile;
 import boris.tserinher.codeGeneration.Method;
+import boris.tserinher.instructions.InstrEnum;
+import boris.tserinher.instructions.Instruction;
 import boris.tserinher.records.MethodRec;
 import boris.tserinher.records.BaseRec;
 import boris.tserinher.symbolTable.MiniJavaSymbolTable;
@@ -47,35 +49,33 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<BaseRec> {
 
 	@Override
 	public BaseRec visitLessExpression(LessExpressionContext ctx) {
-		// TODO Auto-generated method stub
-		/*int numChildren = ctx.getChildCount();
+		// TODO edit asap
+		int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
 		for(int i= 2; i < numChildren; i+=2){
 			visit(ctx.getChild(i));
-			currentMethod.addInstruction(new Instruction(ILT, null));
+			currentMethod.addInstruction(InstrEnum.ILT, null);
 		}		
-		return null;*/
-		return super.visitLessExpression(ctx);
+		return null;
+		//return super.visitLessExpression(ctx);
 	}
 	@Override
 	public BaseRec visitNotExpression(NotExpressionContext ctx) {
-		// TODO Auto-generated method stub
-		/*visit(ctx.getChild(1));
-		currentMethod.addInstruction(new Instruction(INOT, null));
-		return null;*/
-		return super.visitNotExpression(ctx);
+		// TODO edit
+		visit(ctx.getChild(1));
+		currentMethod.addInstruction(InstrEnum.INOT, null);
+		return null;
 	}
 	@Override
 	public BaseRec visitEqualExpression(EqualExpressionContext ctx) {
 		// TODO Auto-generated method stub
-		/*int numChildren = ctx.getChildCount();
+		int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
 		for(int i= 2; i < numChildren; i+=2){
 			visit(ctx.getChild(i));
-			currentMethod.addInstruction(new Instruction(IEQ, null));
+			currentMethod.addInstruction(InstrEnum.IEQ, null);
 		}		
-		return null;*/
-		return super.visitEqualExpression(ctx);
+		return null;
 	}
 	@Override
 	public BaseRec visitMethod(MethodContext ctx) {
@@ -92,21 +92,43 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<BaseRec> {
 		//System.out.println("SYMTAB " + symtab);
 		//System.out.println("MREC " + mrec);
 		currentMethod = classFile.addMethod(currentClass + "." + currentMethodName); // New Method!
-		currentMethod.setVariablesList(mrec.getLocals()); // Add variable array symtab.enterScope();
+		currentMethod.setVariables(mrec.getLocals()); // Add variable array symtab.enterScope();
 		
 		visit(ctx.getChild(3));
 		visit(ctx.getChild(6));
 		 
 		symtab.exitScope();
 		return null; //super.visitMethod(ctx);
+		
+		
+		/*symtab.enterScope();
+		
+		String methodName = ctx.getChild(1).getText(); // method name	
+		//System.out.println("\nMethod: "+methodName+"\n");
+		MethodRec methodRecord = (MethodRec) symtab.lookup(methodName);
+
+		// create new method
+		currentMethod = new Method();
+		// add method parameter-variables					
+		currentMethod.setVariables(methodRecord.getLocals()); 	
+		// enter scope
+	//	symtab.enterScope();
+		//param declaration
+		visit(ctx.getChild(3));
+		// method body
+		visit(ctx.getChild(6));
+		// exit scope
+		symtab.exitScope();
+		// add to classFile
+		classFile.addMethod(currentClass +"." + methodName, currentMethod ); // add the method to classFile
+		return null;*/
 	}
 	@Override
 	public BaseRec visitPrintStatement(PrintStatementContext ctx) {
 		// TODO Auto-generated method stub
-		/*visit(ctx.getChild(2)); // visit inside print
-		currentMethod.addInstruction(new Instruction(PRINT,null));
-		return null;*/
-		return super.visitPrintStatement(ctx);
+		visit(ctx.getChild(2)); // visit inside print
+		currentMethod.addInstruction(InstrEnum.PRINT, null);
+		return null;
 	}
 	@Override
 	public BaseRec visitField(FieldContext ctx) {
@@ -123,34 +145,32 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<BaseRec> {
 	@Override
 	public BaseRec visitIfStatment(IfStatmentContext ctx) {
 		// TODO Auto-generated method stub
-		/*visit(ctx.getChild(2)); // generate condition		
+		visit(ctx.getChild(2)); // generate condition		
 		int iflabel = currentMethod.getIndex();
-		currentMethod.addInstruction(new Instruction(IF_FALSE, null));
+		currentMethod.addInstruction(InstrEnum.IFFALSE, null);
 		visit(ctx.getChild(4)); // generate if body
 		Instruction instr = currentMethod.getInstruction(iflabel);
-		instr.setArgument(currentMethod.getIndex()+1); // update if_false
+		instr.setInstructionObject(currentMethod.getIndex() + 1); // update if_false
 		
 		int gotolabel = currentMethod.getIndex(); // save goto
-		currentMethod.addInstruction(new Instruction(GOTO, null));
+		currentMethod.addInstruction(InstrEnum.GOTO, null);
 		if(ctx.getChild(6) != null){
 			visit(ctx.getChild(6)); // generate if else body
 			instr = currentMethod.getInstruction(gotolabel);
-			instr.setArgument(currentMethod.getIndex());
+			instr.setInstructionObject(currentMethod.getIndex());
 		}
-		return null;*/
-		return super.visitIfStatment(ctx);
+		return null;
 	}
 	@Override
 	public BaseRec visitMinusExpression(MinusExpressionContext ctx) {
 		// TODO Auto-generated method stub
-		/*int numChildren = ctx.getChildCount();
+		int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
 		for(int i= 2; i < numChildren; i+=2){
 			visit(ctx.getChild(i));
-			currentMethod.addInstruction(new Instruction(ISUB, null));
+			currentMethod.addInstruction(InstrEnum.ISUB, null);
 		}
-		return null;*/
-		return super.visitMinusExpression(ctx);
+		return null;
 	}
 	@Override
 	public BaseRec visitMainClass(MainClassContext ctx) {
@@ -181,14 +201,13 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<BaseRec> {
 	@Override
 	public BaseRec visitDivExpression(DivExpressionContext ctx) {
 		// TODO Auto-generated method stub
-		/*int numChildren = ctx.getChildCount();
+		int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
 		for(int i= 2; i < numChildren; i+=2){
 			visit(ctx.getChild(i));
-			currentMethod.addInstruction(new Instruction(IDIV, null));
+			currentMethod.addInstruction(InstrEnum.IDIV, null);
 		}
-		return null;*/
-		return super.visitDivExpression(ctx);
+		return null;
 	}
 	@Override
 	public BaseRec visitReturnStatement(ReturnStatementContext ctx) {
@@ -214,20 +233,19 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<BaseRec> {
 	@Override
 	public BaseRec visitAndExpression(AndExpressionContext ctx) {
 		// TODO Auto-generated method stub
-		/*int numChildren = ctx.getChildCount();
+		int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
 		for(int i= 2; i < numChildren; i+=2){
 			visit(ctx.getChild(i));
 			if(ctx.getChild(i-1).toString().equals("&&")){
-				currentMethod.addInstruction(new Instruction(IAND, null));
+				currentMethod.addInstruction(InstrEnum.IAND, null);
 			}else if(ctx.getChild(i-1).toString().equals("||")){
-				currentMethod.addInstruction(new Instruction(IOR, null));
+				currentMethod.addInstruction(InstrEnum.IOR, null);
 			}else{
 				System.out.println("ERROR ERROR ERROR");
 			}
 		}		
-		return null;*/
-		return super.visitAndExpression(ctx);
+		return null;
 	}
 	@Override
 	public BaseRec visitParameter(ParameterContext ctx) {
@@ -238,26 +256,24 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<BaseRec> {
 	@Override
 	public BaseRec visitMultExpression(MultExpressionContext ctx) {
 		// TODO Auto-generated method stub
-		/*int numChildren = ctx.getChildCount();
+		int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
 		for(int i= 2; i < numChildren; i+=2){
 			visit(ctx.getChild(i));
-			currentMethod.addInstruction(new Instruction(IMUL, null));
+			currentMethod.addInstruction(InstrEnum.IMUL, null);
 		}
-		return null;*/
-		return super.visitMultExpression(ctx);
+		return null;
 	}
 	@Override
 	public BaseRec visitPlusExpression(PlusExpressionContext ctx) {
 		// TODO Auto-generated method stub
-		/*int numChildren = ctx.getChildCount();
+		int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
 		for(int i= 2; i < numChildren; i+=2){
 			visit(ctx.getChild(i));
-			currentMethod.addInstruction(new Instruction(IADD, null));
+			currentMethod.addInstruction(InstrEnum.IADD, null);
 		}
-		return null;*/
-		return super.visitPlusExpression(ctx);
+		return null;
 	}
 	@Override
 	public BaseRec visitMainMethod(MainMethodContext ctx) {
@@ -282,38 +298,36 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<BaseRec> {
 	@Override
 	public BaseRec visitWhileStatement(WhileStatementContext ctx) {
 		// TODO Auto-generated method stub
-		/*int whilelabel = currentMethod.getIndex();
+		int whilelabel = currentMethod.getIndex();
 		visit(ctx.getChild(2)); // generate condition	
 		int iffalse = currentMethod.getIndex();
-		currentMethod.addInstruction(new Instruction(IF_FALSE, null));
+		currentMethod.addInstruction(InstrEnum.IFFALSE, null);
 		visit(ctx.getChild(4)); // generate while body				
 		Instruction instr = currentMethod.getInstruction(iffalse);
-		instr.setArgument(currentMethod.getIndex()+1); // update if_false
+		instr.setInstructionObject(currentMethod.getIndex() + 1); // update if_false
 		
 		int gotolabel = currentMethod.getIndex();
-		currentMethod.addInstruction(new Instruction(GOTO, null));
+		currentMethod.addInstruction(InstrEnum.GOTO, null);
 		instr = currentMethod.getInstruction(gotolabel);
-		instr.setArgument(whilelabel);
-		return null;*/
-		return super.visitWhileStatement(ctx);
+		instr.setInstructionObject(whilelabel);
+		return null;
 	}
 	@Override
 	public BaseRec visitOrExpression(OrExpressionContext ctx) {
 		// TODO Auto-generated method stub
-		/*int numChildren = ctx.getChildCount();
+		int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
 		for(int i= 2; i < numChildren; i+=2){
 			visit(ctx.getChild(i));
 			if(ctx.getChild(i-1).toString().equals("&&")){
-				currentMethod.addInstruction(new Instruction(IAND, null));
+				currentMethod.addInstruction(InstrEnum.IAND, null);
 			}else if(ctx.getChild(i-1).toString().equals("||")){
-				currentMethod.addInstruction(new Instruction(IOR, null));
+				currentMethod.addInstruction(InstrEnum.IOR, null);
 			}else{
 				System.out.println("ERROR ERROR ERROR");
 			}
 		}		
-		return null;*/
-		return super.visitOrExpression(ctx);
+		return null;
 	}
 
 	@Override
