@@ -3,7 +3,7 @@ package boris.tserinher.symbolTable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import boris.tserinher.records.Record;
+import boris.tserinher.records.BaseRec;
 
 public class MiniJavaSymbolTable implements SymbolTable {
 	
@@ -16,7 +16,7 @@ public class MiniJavaSymbolTable implements SymbolTable {
 		this.currentScope = rootScope;
 	}
 	
-	public HashMap<String, Record> getRecords(){
+	public HashMap<String, BaseRec> getRecords(){
 		return currentScope.getRecords();
 	}
 
@@ -61,13 +61,13 @@ public class MiniJavaSymbolTable implements SymbolTable {
 	}
 
 	@Override
-	public void putRecord(String id, Record record) {
+	public void putRecord(String id, BaseRec record) {
 		//System.out.println("PutRecord SymTab" + id + " " + record.getType());
 		currentScope.putRecord(id, record);
 	}
 
 	@Override
-	public Record lookup(String id) {
+	public BaseRec lookup(String id) {
 		//System.out.println("Method lookup " + currentScope.scopeName + " " + currentScope.scopeType);
 		return currentScope.lookup(id);
 	}
@@ -84,7 +84,7 @@ public class MiniJavaSymbolTable implements SymbolTable {
 		private int next = 0; //Next child to visit
 		private Scope parentScope; //Parent scope
 		private ArrayList<Scope> scopeChildrenList = new ArrayList<>(); //Children scopes
-		private HashMap<String, Record> records = new HashMap<>();
+		private HashMap<String, BaseRec> records = new HashMap<>();
 		
 		public Scope(Scope parentScope) {
 			this.parentScope = parentScope;
@@ -119,18 +119,18 @@ public class MiniJavaSymbolTable implements SymbolTable {
 			return nextChild;
 		}
 		
-		public HashMap<String, Record> getRecords(){
+		public HashMap<String, BaseRec> getRecords(){
 			return records;
 		}
 		
 		
 		
-		public Record lookup(String id) {
+		public BaseRec lookup(String id) {
 			//System.out.println("Record method Lookup");
 			//System.out.println("RECORDS " + records.size());
 			if (records.containsKey(id)){ //Check if in current scope
 				//System.out.println("IF true: " + records.containsKey(id));
-				return (Record) records.get(id);
+				return (BaseRec) records.get(id);
 			}
 			else { //System.out.println("ELSE");//Move to enclosing/parent scope
 				if (parentScope == null){
@@ -147,7 +147,7 @@ public class MiniJavaSymbolTable implements SymbolTable {
 			((Scope)scopeChildrenList.get(i)).resetScope();
 		}
 		
-		public void putRecord(String id, Record record){
+		public void putRecord(String id, BaseRec record){
 			records.put(id, record);
 		}
 

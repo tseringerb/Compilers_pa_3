@@ -18,11 +18,22 @@ public enum InstrEnum {
 	INVOKEVIRTUAL(15),	//Push current activation and switch to the method having qualified name m.
 	IRETURN(16),	//Pop activation and continue.
 	PRINT(17), 	//Pop value and print.
-	STOP(18);		//Execution completed.
+	STOP(18),		//Execution completed.
 	
-	private int code;
+	NONE(0);
+	
+	public int code;
 	
 	InstrEnum(int code) {
 		this.code = code;
+	}
+	
+	public static InstrEnum getByCode(int code) {
+		for (InstrEnum value : InstrEnum.values()) {
+			if (value.code == code) {
+				return value;
+			}
+		}
+		return InstrEnum.NONE;
 	}
 }

@@ -28,12 +28,12 @@ import boris.tserinher.MiniJavaGrammarParser.StartContext;
 import boris.tserinher.MiniJavaGrammarParser.WhileStatementContext;
 import boris.tserinher.codeGeneration.ClassFile;
 import boris.tserinher.codeGeneration.Method;
-import boris.tserinher.records.MethodRecord;
-import boris.tserinher.records.Record;
+import boris.tserinher.records.MethodRec;
+import boris.tserinher.records.BaseRec;
 import boris.tserinher.symbolTable.MiniJavaSymbolTable;
 import boris.tserinher.symbolTable.SymbolTable;
 
-public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
+public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<BaseRec> {
 	
 	private MiniJavaSymbolTable symtab; //From previous iteration
 	private Method currentMethod; //See visitMethodDecl()
@@ -46,7 +46,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 
 	@Override
-	public Record visitLessExpression(LessExpressionContext ctx) {
+	public BaseRec visitLessExpression(LessExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
@@ -58,7 +58,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitLessExpression(ctx);
 	}
 	@Override
-	public Record visitNotExpression(NotExpressionContext ctx) {
+	public BaseRec visitNotExpression(NotExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*visit(ctx.getChild(1));
 		currentMethod.addInstruction(new Instruction(INOT, null));
@@ -66,7 +66,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitNotExpression(ctx);
 	}
 	@Override
-	public Record visitEqualExpression(EqualExpressionContext ctx) {
+	public BaseRec visitEqualExpression(EqualExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
@@ -78,7 +78,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitEqualExpression(ctx);
 	}
 	@Override
-	public Record visitMethod(MethodContext ctx) {
+	public BaseRec visitMethod(MethodContext ctx) {
 		String currentMethodName = ctx.getChild(1).getText(); //Method name
 		//System.out.println("Current Method: " + currentMethodName);
 		//System.out.println("Visit method "+ currentMethodName + " CurrentScopeName: " + symtab.getCurrentScopeName());
@@ -87,8 +87,8 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		//TODO !!!! вызов ниже это костыль, потому что я не понимаю почему при вызове enterScope в классах мы не заходим в нижний Scope 
 		symtab.enterScope();
 		//System.out.println(symtab.getCurrentScopeName());
-		//System.out.println("Records" + symtab.getRecords());
-		MethodRecord mrec = (MethodRecord)symtab.lookup(currentMethodName);
+		//System.out.println("BaseRecs" + symtab.getBaseRecs());
+		MethodRec mrec = (MethodRec)symtab.lookup(currentMethodName);
 		//System.out.println("SYMTAB " + symtab);
 		//System.out.println("MREC " + mrec);
 		currentMethod = classFile.addMethod(currentClass + "." + currentMethodName); // New Method!
@@ -101,7 +101,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return null; //super.visitMethod(ctx);
 	}
 	@Override
-	public Record visitPrintStatement(PrintStatementContext ctx) {
+	public BaseRec visitPrintStatement(PrintStatementContext ctx) {
 		// TODO Auto-generated method stub
 		/*visit(ctx.getChild(2)); // visit inside print
 		currentMethod.addInstruction(new Instruction(PRINT,null));
@@ -109,19 +109,19 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitPrintStatement(ctx);
 	}
 	@Override
-	public Record visitField(FieldContext ctx) {
+	public BaseRec visitField(FieldContext ctx) {
 		System.out.println("VISIT FIELD");
 		System.out.println(ctx.getText());
 		System.out.println(ctx.getChild(0).getText());
 		return super.visitField(ctx);
 	}
 	@Override
-	public Record visitParametersList(ParametersListContext ctx) {
+	public BaseRec visitParametersList(ParametersListContext ctx) {
 		System.out.println("Parametr list " + ctx.getText());
 		return super.visitParametersList(ctx);
 	}
 	@Override
-	public Record visitIfStatment(IfStatmentContext ctx) {
+	public BaseRec visitIfStatment(IfStatmentContext ctx) {
 		// TODO Auto-generated method stub
 		/*visit(ctx.getChild(2)); // generate condition		
 		int iflabel = currentMethod.getIndex();
@@ -141,7 +141,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitIfStatment(ctx);
 	}
 	@Override
-	public Record visitMinusExpression(MinusExpressionContext ctx) {
+	public BaseRec visitMinusExpression(MinusExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
@@ -153,7 +153,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitMinusExpression(ctx);
 	}
 	@Override
-	public Record visitMainClass(MainClassContext ctx) {
+	public BaseRec visitMainClass(MainClassContext ctx) {
 		currentClass = ctx.getChild(1).getText();
 		System.out.println("Current class: " + currentClass);
 		System.out.println("Visit main Class CurrentScopeName: " + symtab.getCurrentScopeName());
@@ -163,7 +163,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return null;//super.visitMainClass(ctx);
 	}
 	@Override
-	public Record visitAssignmentStatement(AssignmentStatementContext ctx) {
+	public BaseRec visitAssignmentStatement(AssignmentStatementContext ctx) {
 		String lhs = ctx.getChild(0).getText(); //LHS name
 		visit(ctx.getChild(1)); //Generate RHS code
 		//int index = currentMethod.getIndexOf(lhs);
@@ -174,12 +174,12 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		//return super.visitAssignmentStatement(ctx);
 	}
 	@Override
-	public Record visitMethodCallExpression(MethodCallExpressionContext ctx) {
+	public BaseRec visitMethodCallExpression(MethodCallExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		return super.visitMethodCallExpression(ctx);
 	}
 	@Override
-	public Record visitDivExpression(DivExpressionContext ctx) {
+	public BaseRec visitDivExpression(DivExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
@@ -191,18 +191,18 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitDivExpression(ctx);
 	}
 	@Override
-	public Record visitReturnStatement(ReturnStatementContext ctx) {
+	public BaseRec visitReturnStatement(ReturnStatementContext ctx) {
 		// TODO Auto-generated method stub
 		return super.visitReturnStatement(ctx);
 	}
 	@Override
-	public Record visitIdentifierType(IdentifierTypeContext ctx) {
+	public BaseRec visitIdentifierType(IdentifierTypeContext ctx) {
 		System.out.println("VISIT IDDENTIFIERTYPE");
 		System.out.println(ctx.getText());
 		return super.visitIdentifierType(ctx);
 	}
 	@Override
-	public Record visitClassDeclaration(ClassDeclarationContext ctx) {
+	public BaseRec visitClassDeclaration(ClassDeclarationContext ctx) {
 		currentClass = ctx.getChild(1).getText();
 		System.out.println("Current class: " + currentClass);
 		System.out.println("Visit class Declar CurrentScope: " + symtab.getCurrentScopeName());
@@ -212,7 +212,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return null; //super.visitClassDeclaration(ctx);
 	}
 	@Override
-	public Record visitAndExpression(AndExpressionContext ctx) {
+	public BaseRec visitAndExpression(AndExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
@@ -230,13 +230,13 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitAndExpression(ctx);
 	}
 	@Override
-	public Record visitParameter(ParameterContext ctx) {
+	public BaseRec visitParameter(ParameterContext ctx) {
 		System.out.println("VISIT PARAMETR");
 		System.out.println(ctx.getText());
 		return super.visitParameter(ctx);
 	}
 	@Override
-	public Record visitMultExpression(MultExpressionContext ctx) {
+	public BaseRec visitMultExpression(MultExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
@@ -248,7 +248,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitMultExpression(ctx);
 	}
 	@Override
-	public Record visitPlusExpression(PlusExpressionContext ctx) {
+	public BaseRec visitPlusExpression(PlusExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
@@ -260,7 +260,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitPlusExpression(ctx);
 	}
 	@Override
-	public Record visitMainMethod(MainMethodContext ctx) {
+	public BaseRec visitMainMethod(MainMethodContext ctx) {
 		String currentMethodName = ctx.getChild(3).getText();
 		System.out.println("Current Method: " + currentMethodName);
 		System.out.println("Visit main method CurrentScope:" + symtab.getCurrentScopeName());
@@ -272,7 +272,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return null; //super.visitMainMethod(ctx);
 	}
 	@Override
-	public Record visitStart(StartContext ctx) {
+	public BaseRec visitStart(StartContext ctx) {
 		classFile = new ClassFile();
 		System.out.println("Visit start CurrentScope: " + symtab.getCurrentScopeName());
 		symtab.enterScope();
@@ -280,7 +280,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return null; //super.visitStart(ctx);
 	}
 	@Override
-	public Record visitWhileStatement(WhileStatementContext ctx) {
+	public BaseRec visitWhileStatement(WhileStatementContext ctx) {
 		// TODO Auto-generated method stub
 		/*int whilelabel = currentMethod.getIndex();
 		visit(ctx.getChild(2)); // generate condition	
@@ -298,7 +298,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		return super.visitWhileStatement(ctx);
 	}
 	@Override
-	public Record visitOrExpression(OrExpressionContext ctx) {
+	public BaseRec visitOrExpression(OrExpressionContext ctx) {
 		// TODO Auto-generated method stub
 		/*int numChildren = ctx.getChildCount();
 		visit(ctx.getChild(0)); // first factor code
@@ -317,7 +317,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 
 	@Override
-	public Record visitMethodInvocation(MethodInvocationContext ctx) {
+	public BaseRec visitMethodInvocation(MethodInvocationContext ctx) {
 		System.out.println("VISIT METHOD INVOCATION");
 		System.out.println(ctx.getText());
 		return super.visitMethodInvocation(ctx);

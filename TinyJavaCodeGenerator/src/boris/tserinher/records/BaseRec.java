@@ -1,15 +1,15 @@
 package boris.tserinher.records;
 
-public class Record {
+public class BaseRec {
 	
 	private String id;
 	private String type;
 	
-	public Record() {
+	public BaseRec() {
 		super();
 	}
 	
-	public Record(String id, String type) {
+	public BaseRec(String id, String type) {
 		super();
 		this.id = id;
 		this.type = type;

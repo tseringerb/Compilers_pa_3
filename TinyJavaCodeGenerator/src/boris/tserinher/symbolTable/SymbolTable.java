@@ -1,6 +1,6 @@
 package boris.tserinher.symbolTable;
 
-import boris.tserinher.records.Record;
+import boris.tserinher.records.BaseRec;
 
 public interface SymbolTable {
 	
@@ -8,9 +8,9 @@ public interface SymbolTable {
 	
 	public void exitScope();
 	
-	public void putRecord(String key, Record record);
+	public void putRecord(String key, BaseRec record);
 	
-	public Record lookup(String key);
+	public BaseRec lookup(String key);
 		
 	public void printTable(); // Diagnostics
 	

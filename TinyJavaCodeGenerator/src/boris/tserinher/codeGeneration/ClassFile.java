@@ -7,7 +7,7 @@ public class ClassFile implements Serializable {
 	
 	private HashMap<String, Method> methodsList = new HashMap<>();
 	
-	public Method addMethod(String methodName/*, Method method*/){
+	public Method addMethod(String methodName){
 		methodsList.put(methodName, new Method());
 		return methodsList.get(methodName);
 	}

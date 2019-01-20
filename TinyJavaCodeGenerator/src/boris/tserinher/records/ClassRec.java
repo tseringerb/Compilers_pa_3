@@ -2,28 +2,28 @@ package boris.tserinher.records;
 
 import java.util.HashMap;
 
-public class ClassRecord extends Record {
+public class ClassRec extends BaseRec {
 		
-	public ClassRecord(String id, String type) {
+	public ClassRec(String id, String type) {
 		super(id, type);
 	}
 	
-	private HashMap<String, MethodRecord> methodsList = new HashMap<>();
-	private HashMap<String , VarRecord> fieldsList = new HashMap<>();
+	private HashMap<String, MethodRec> methodsList = new HashMap<>();
+	private HashMap<String , VariableRec> fieldsList = new HashMap<>();
 	
-	public void putMethodRecord(MethodRecord methodRecord){
+	public void putMethodRecord(MethodRec methodRecord){
 		methodsList.put(methodRecord.getId(), methodRecord);
 	}
 	
-	public MethodRecord getMethodRecord(String methodId){
+	public MethodRec getMethodRecord(String methodId){
 		return methodsList.get(methodId);
 	}
 	
-	public void putFieldsRecord(VarRecord fieldRecord){
+	public void putFieldsRecord(VariableRec fieldRecord){
 		fieldsList.put(fieldRecord.getId(), fieldRecord);
 	}
 	
-	public VarRecord getFieldRecord(String fieldId){
+	public VariableRec getFieldRecord(String fieldId){
 		return fieldsList.get(fieldId);
 	}
 	

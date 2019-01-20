@@ -8,15 +8,15 @@ import boris.tserinher.MiniJavaGrammarParser.MainMethodContext;
 import boris.tserinher.MiniJavaGrammarParser.MethodContext;
 import boris.tserinher.MiniJavaGrammarParser.ParameterContext;
 import boris.tserinher.MiniJavaGrammarParser.ProgramContext;
-import boris.tserinher.records.ClassRecord;
-import boris.tserinher.records.MethodRecord;
-import boris.tserinher.records.VarRecord;
+import boris.tserinher.records.ClassRec;
+import boris.tserinher.records.MethodRec;
+import boris.tserinher.records.VariableRec;
 
 public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 	
 	private MiniJavaSymbolTable symbolTable;
-	private ClassRecord currentClass;
-	private MethodRecord currentMethod;
+	private ClassRec currentClass;
+	private MethodRec currentMethod;
 	
 	public SymbolTableListener() {
 		super();
@@ -46,7 +46,7 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		String id = ctx.getChild(1).toString();
 		String type = ctx.getChild(0).toString();
 		
-		currentClass = new ClassRecord(id, type);
+		currentClass = new ClassRec(id, type);
 		symbolTable.enterScope();
 		symbolTable.setCurrentScopeType(type);
 		symbolTable.setCurrentScopeName(id);
@@ -65,7 +65,7 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		String id = ctx.getChild(1).toString();
 		String type = ctx.getChild(0).toString();
 		
-		currentClass = new ClassRecord(id, type);
+		currentClass = new ClassRec(id, type);
 		
 		symbolTable.enterScope();
 		symbolTable.setCurrentScopeType(type);
@@ -89,7 +89,7 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		symbolTable.enterScope();
 		symbolTable.setCurrentScopeType("method");
 		
-		currentMethod = new MethodRecord(id, type);
+		currentMethod = new MethodRec(id, type);
 		currentClass.putMethodRecord(currentMethod);
 		symbolTable.putRecord(id, currentMethod);
 		symbolTable.setCurrentScopeName(id);
@@ -110,7 +110,7 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		symbolTable.enterScope();
 		symbolTable.setCurrentScopeType("method");
 		
-		currentMethod = new MethodRecord(id, type);
+		currentMethod = new MethodRec(id, type);
 		currentClass.putMethodRecord(currentMethod);
 		symbolTable.putRecord(id, currentMethod	);
 
@@ -129,7 +129,7 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		String id = ctx.getChild(1).toString();
 		String type = ctx.getChild(0).getChild(0).getChild(0).toString();
 		
-		VarRecord fieldRecord = new VarRecord(id, type);
+		VariableRec fieldRecord = new VariableRec(id, type);
 		symbolTable.putRecord(id, fieldRecord);
 		currentClass.putFieldsRecord(fieldRecord);
 		
@@ -141,7 +141,7 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		String id = ctx.getChild(1).toString();
 		String type = ctx.getChild(0).getChild(0).getChild(0).toString();
 		
-		VarRecord parameterRecord = new VarRecord(id, type);		
+		VariableRec parameterRecord = new VariableRec(id, type);		
 		symbolTable.putRecord(id, parameterRecord);
 		currentMethod.putParameterRecord(parameterRecord);
 

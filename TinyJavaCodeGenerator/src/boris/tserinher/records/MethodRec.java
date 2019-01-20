@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MethodRecord extends Record {
+public class MethodRec extends BaseRec {
 
-	public MethodRecord(String id, String type) {
+	public MethodRec(String id, String type) {
 		super(id, type);
 	}
-	private HashMap<String , VarRecord> parametersList = new HashMap<>();
+	private HashMap<String , VariableRec> parametersList = new HashMap<>();
 	
-	public void putParameterRecord(VarRecord parameterRecord){
+	public void putParameterRecord(VariableRec parameterRecord){
 		parametersList.put(parameterRecord.getId(), parameterRecord);
 	}
 	
-	public VarRecord getParameterRecord(String parameterId){
+	public VariableRec getParameterRecord(String parameterId){
 		return parametersList.get(parameterId);
 	}
 	
