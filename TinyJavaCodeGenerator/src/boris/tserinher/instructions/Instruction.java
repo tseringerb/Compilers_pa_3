@@ -1,5 +1,10 @@
 package boris.tserinher.instructions;
 
-public class Instruction {
+import java.io.Serializable;
 
+public class Instruction implements Serializable{
+
+		
+	}
+	
 }
