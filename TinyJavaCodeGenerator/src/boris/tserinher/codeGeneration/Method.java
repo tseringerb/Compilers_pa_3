@@ -29,7 +29,19 @@ public class Method {
 	
 	private class Variable{
 		
+		private int index;
 		private String id;
+		private int value;
+		
+		public Variable(int index, String id, int value) {
+			super();
+			this.index = index;
+			this.id = id;
+			this.value = value;
+		}
+		
+		
+		
 		
 	}
 	

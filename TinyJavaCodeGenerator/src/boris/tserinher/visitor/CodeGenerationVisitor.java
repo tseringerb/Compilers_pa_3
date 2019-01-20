@@ -40,6 +40,8 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	private String currentClass; //See visitClassDecl()
 	private ClassFile classFile; //To be saved on disk
 	
+	private int counter = 0;
+	
 	public CodeGenerationVisitor(SymbolTable symtab) {
 		super();
 		this.symtab = (MiniJavaSymbolTable) symtab;
@@ -113,6 +115,8 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 		System.out.println("VISIT FIELD");
 		System.out.println(ctx.getText());
 		System.out.println(ctx.getChild(0).getText());
+		counter++;
+		System.out.println("COUNTER " + counter);
 		return super.visitField(ctx);
 	}
 	@Override
