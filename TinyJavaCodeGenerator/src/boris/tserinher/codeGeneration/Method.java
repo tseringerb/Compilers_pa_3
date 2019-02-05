@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 import boris.tserinher.instructions.Instruction;
 
 public class Method {
@@ -15,14 +17,8 @@ public class Method {
 	
 	private int programCounter = 0; //next instruction to be executed
 	
-	void print(){
-		variablesList.forEach((variable)->{
-			System.out.printf("%d s% %d", variable.index, variable.id, variable.value);
-		});//TODO
-	}
-	
 	public void addVariable(Variable variable){
-		variable.index = variablesList.size() + 1;
+		//variable.index = variablesList.size() + 1;
 		variablesList.add(variable);
 		nameToIndex.put(variable.id, variablesList.indexOf(variable));
 	}
@@ -36,12 +32,31 @@ public class Method {
 	}
 	
 	public int getCurrentInstructionIndex(){
-		return instructions.size();	
+		return instructions.size() - 1;	
+	}
+	
+	public void addVariablesList(List<String> variableIdList){ // переносим переменные методов из таблицы 
+		variableIdList.forEach((variableId)->{ // в список переменных метода в кодогенерации
+			variablesList.add(new Variable(variableId));
+			System.out.println(variableId);
+		});
+		
+		for(int index = 0; index < variableIdList.size(); index++){
+			nameToIndex.put(variableIdList.get(index), index);
+		}
+	}
+	
+	
+	
+	public void printVariableList(){
+		variablesList.forEach((variable)->{
+			System.out.println(variable.id);
+			});
 	}
 
 	private class Variable{
 		
-		private int index;
+		//private int index;
 		private String id;
 		private int value;
 		
@@ -51,6 +66,11 @@ public class Method {
 			this.value = value;
 		}
 
+		public Variable(String id) {
+			super();
+			this.id = id;
+		}
+		
 		public int getValue() {
 			return value;
 		}
@@ -59,6 +79,21 @@ public class Method {
 			this.value = value;
 		}	
 		
+	}
+	
+	public void print(){
+		variablesList.forEach((variable)->{
+			System.out.printf("index%d id%s value%d", variablesList.indexOf(variable), variable.id, variable.value);
+		});//TODO
+	}
+
+	public int getIndexOf(String lhs) {	
+		return nameToIndex.get(lhs);
+	}
+
+	public void addInstruction(int iCode, int argument) {
+		Instruction instruction = new Instruction(iCode, argument);
+		instructions.add(instruction);	
 	}
 	
 }

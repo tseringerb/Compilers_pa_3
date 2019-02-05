@@ -130,9 +130,11 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		String type = ctx.getChild(0).getChild(0).getChild(0).toString();
 		
 		VarRecord fieldRecord = new VarRecord(id, type);
+		VarRecord parameterRecord = new VarRecord(id, type);
 		symbolTable.putRecord(id, fieldRecord);
 		currentClass.putFieldsRecord(fieldRecord);
-		
+		currentMethod.putParameterRecord(parameterRecord); // так как в TinyJava у классов нет полей вносим 
+														   // все поля в список параметров метода
 		super.enterField(ctx);
 	}
 

@@ -7,6 +7,7 @@ import boris.tserinher.MiniJavaGrammarParser.ClassDeclarationContext;
 import boris.tserinher.MiniJavaGrammarParser.DivExpressionContext;
 import boris.tserinher.MiniJavaGrammarParser.EqualExpressionContext;
 import boris.tserinher.MiniJavaGrammarParser.FieldContext;
+import boris.tserinher.MiniJavaGrammarParser.IDExpressionContext;
 import boris.tserinher.MiniJavaGrammarParser.IdentifierTypeContext;
 import boris.tserinher.MiniJavaGrammarParser.IfStatmentContext;
 import boris.tserinher.MiniJavaGrammarParser.LessExpressionContext;
@@ -22,18 +23,22 @@ import boris.tserinher.MiniJavaGrammarParser.OrExpressionContext;
 import boris.tserinher.MiniJavaGrammarParser.ParameterContext;
 import boris.tserinher.MiniJavaGrammarParser.ParametersListContext;
 import boris.tserinher.MiniJavaGrammarParser.PlusExpressionContext;
+import boris.tserinher.MiniJavaGrammarParser.PrePlusMinusIntegerExpressionContext;
 import boris.tserinher.MiniJavaGrammarParser.PrintStatementContext;
 import boris.tserinher.MiniJavaGrammarParser.ReturnStatementContext;
 import boris.tserinher.MiniJavaGrammarParser.StartContext;
 import boris.tserinher.MiniJavaGrammarParser.WhileStatementContext;
 import boris.tserinher.codeGeneration.ClassFile;
 import boris.tserinher.codeGeneration.Method;
+import boris.tserinher.instructions.ICodes;
+import boris.tserinher.instructions.Instruction;
+import boris.tserinher.records.ClassRecord;
 import boris.tserinher.records.MethodRecord;
 import boris.tserinher.records.Record;
 import boris.tserinher.symbolTable.MiniJavaSymbolTable;
 import boris.tserinher.symbolTable.SymbolTable;
 
-public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
+public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> implements ICodes{
 	
 	private MiniJavaSymbolTable symtab; //From previous iteration
 	private Method currentMethod; //See visitMethodDecl()
@@ -63,75 +68,60 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 	@Override
 	public Record visitMethod(MethodContext ctx) {
+		System.out.println("VISIT_METHOD_METHOD: " + ctx.getChild(1).getText());
 		String currentMethodName = ctx.getChild(1).getText(); //Method name
-		//System.out.println("Current Method: " + currentMethodName);
-		//System.out.println("Visit method "+ currentMethodName + " CurrentScopeName: " + symtab.getCurrentScopeName());
-		//symtab.enterScope();
-		//System.out.println("Current Method Scope: " + symtab.getCurrentScopeName());
-		//TODO !!!! вызов ниже это костыль, потому что я не понимаю почему при вызове enterScope в классах мы не заходим в нижний Scope 
-		symtab.enterScope();
-		//System.out.println(symtab.getCurrentScopeName());
-		//System.out.println("Records" + symtab.getRecords());
-		MethodRecord mrec = (MethodRecord)symtab.lookup(currentMethodName);
-		System.out.println(mrec);
-		//System.out.println("SYMTAB " + symtab);
-		//System.out.println("MREC " + mrec);
-		currentMethod = classFile.addMethod(currentClass + "." + currentMethodName); // New Method!
-		//currentMethod.setVariablesList(mrec.getLocals()); // Add variable array symtab.enterScope();
 		
-		visit(ctx.getChild(3));
-		visit(ctx.getChild(6));
+		symtab.enterScope(); //TODO !!!! это костыль, потому что я не понимаю почему при вызове enterScope в классах мы не заходим в нижний Scope 
+		MethodRecord mrec = (MethodRecord)symtab.lookup(currentMethodName);
+		//System.out.println(mrec);
+		currentMethod = classFile.addMethod(currentClass + "." + currentMethodName); // New Method!
+		System.out.println("MREC " + mrec.getLocals());
+		currentMethod.addVariablesList(mrec.getLocals()); // Add variable array symtab.enterScope();
+		
+		visit(ctx.getChild(3)); // generate ParamDeclList code
+		//System.out.println("~!!!~" + ctx.getChild(3).getText());
+		visit(ctx.getChild(6)); // generate MethodBody code
 		 
 		symtab.exitScope();
 		return null; //super.visitMethod(ctx);
 	}
 	@Override
 	public Record visitPrintStatement(PrintStatementContext ctx) {
-		// TODO Auto-generated method stub
 		return super.visitPrintStatement(ctx);
 	}
 	@Override
 	public Record visitField(FieldContext ctx) {
-		System.out.println("VISIT FIELD");
-		System.out.println(ctx.getText());
-		System.out.println(ctx.getChild(0).getText());
 		return null;
 	}
 	@Override
 	public Record visitParametersList(ParametersListContext ctx) {
-		System.out.println("Parametr list " + ctx.getText());
 		return super.visitParametersList(ctx);
 	}
 	@Override
 	public Record visitIfStatment(IfStatmentContext ctx) {
-		// TODO Auto-generated method stub
 		return super.visitIfStatment(ctx);
 	}
 	@Override
 	public Record visitMinusExpression(MinusExpressionContext ctx) {
-		// TODO Auto-generated method stub
 		return super.visitMinusExpression(ctx);
 	}
 	@Override
 	public Record visitMainClass(MainClassContext ctx) {
 		currentClass = ctx.getChild(1).getText();
-		System.out.println("Current class: " + currentClass);
-		System.out.println("Visit main Class CurrentScopeName: " + symtab.getCurrentScopeName());
 		symtab.enterScope();
+		
 		visit(ctx.getChild(3));
 		symtab.exitScope();
 		return null;//super.visitMainClass(ctx);
 	}
 	@Override
 	public Record visitAssignmentStatement(AssignmentStatementContext ctx) {
+		//System.out.println("ASSIGNMETN STATEMENT");
 		String lhs = ctx.getChild(0).getText(); //LHS name
-		visit(ctx.getChild(1)); //Generate RHS code
-		//int index = currentMethod.getIndexOf(lhs);
-		//currentMethod.addInstruction(ISTORE,index);
-		System.out.println("ASSIGNMETN STATEMENT");
-		System.out.println(ctx.getText());
+		visit(ctx.getChild(2)); //Generate RHS code
+		int index = currentMethod.getIndexOf(lhs);
+		currentMethod.addInstruction(ISTORE, index);
 		return null;
-		//return super.visitAssignmentStatement(ctx);
 	}
 	@Override
 	public Record visitMethodCallExpression(MethodCallExpressionContext ctx) {
@@ -150,15 +140,11 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 	@Override
 	public Record visitIdentifierType(IdentifierTypeContext ctx) {
-		System.out.println("VISIT IDDENTIFIERTYPE");
-		System.out.println(ctx.getText());
 		return super.visitIdentifierType(ctx);
 	}
 	@Override
 	public Record visitClassDeclaration(ClassDeclarationContext ctx) {
 		currentClass = ctx.getChild(1).getText();
-		System.out.println("Current class: " + currentClass);
-		System.out.println("Visit class Declar CurrentScope: " + symtab.getCurrentScopeName());
 		symtab.enterScope();
 		visit(ctx.getChild(3));
 		symtab.exitScope();
@@ -171,14 +157,17 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	}
 	@Override
 	public Record visitParameter(ParameterContext ctx) {
-		System.out.println("VISIT PARAMETR");
-		System.out.println(ctx.getText());
 		return super.visitParameter(ctx);
 	}
 	@Override
 	public Record visitMultExpression(MultExpressionContext ctx) {
-		// TODO Auto-generated method stub
-		return super.visitMultExpression(ctx);
+		int numChildren = ctx.getChildCount();
+		visit(ctx.getChild(0)); //first factor code
+		for (int i=2; i<numChildren; i+=2) {
+		visit(ctx.getChild(i)); //i:th factor code
+		currentMethod.addInstruction(new Instruction(IMUL, null));
+		}
+		return null;
 	}
 	@Override
 	public Record visitPlusExpression(PlusExpressionContext ctx) {
@@ -188,10 +177,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitMainMethod(MainMethodContext ctx) {
 		String currentMethodName = ctx.getChild(3).getText();
-		System.out.println("Current Method: " + currentMethodName);
-		System.out.println("Visit main method CurrentScope:" + symtab.getCurrentScopeName());
 		currentMethod = new Method();
-		//System.out.println(ctx.getChild(11).getText());
 		symtab.enterScope();
 		visit(ctx.getChild(11));
 		symtab.exitScope();
@@ -200,7 +186,6 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 	@Override
 	public Record visitStart(StartContext ctx) {
 		classFile = new ClassFile();
-		System.out.println("Visit start CurrentScope: " + symtab.getCurrentScopeName());
 		symtab.enterScope();
 		visit(ctx.getChild(0));
 		return null; //super.visitStart(ctx);
@@ -218,13 +203,28 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> {
 
 	@Override
 	public Record visitMethodInvocation(MethodInvocationContext ctx) {
-		System.out.println("VISIT METHOD INVOCATION");
-		System.out.println(ctx.getText());
 		return super.visitMethodInvocation(ctx);
 	}
-	
-	
-	
+
+	@Override
+	public Record visitPrePlusMinusIntegerExpression(
+			PrePlusMinusIntegerExpressionContext ctx) {
+		// TODO Auto-generated method stub
+		return super.visitPrePlusMinusIntegerExpression(ctx);
+	}
+
+	@Override
+	public Record visitIDExpression(IDExpressionContext ctx) { //Only within rhs expressions
+		
+		if(ctx.getText().equals("this")){ //нужно проверить почему 'this' попадает как ID 
+			
+		} else{
+			//System.out.println("ID = " + ctx.getText());
+			int index = currentMethod.getIndexOf(ctx.getText());
+			currentMethod.addInstruction(ILOAD,index);
+		}	
+		return null;		
+	}
 	
 	
 	

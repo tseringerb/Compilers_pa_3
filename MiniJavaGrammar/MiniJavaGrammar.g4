@@ -72,7 +72,7 @@ intArrayType: 'int[]';
 identifierType: ID;
 
 expression :  rBExpr #roundBracketxpression
-| THIS #thosExpression
+| 'this' #thisExpression
 | expression '.' ID ('('methodInvocation?')' | '()')* #methodCallExpression
 | '!' expression #notExpression
 | expression MULT expression #multExpression
@@ -83,7 +83,8 @@ expression :  rBExpr #roundBracketxpression
 | expression '==' expression #equalExpression
 | expression '&&' expression #andExpression
 | expression '||' expression #orExpression
-| (MINUS | PLUS)? (INT | ID) #prePlusMinusExpression
+| (MINUS | PLUS)? INT #prePlusMinusIntegerExpression
+| ID #IDExpression
 | 'new' ID '()' #newObjectExpression
 | BOOLEAN #boolTypeExpression
 | expression (('[' expression ']'('.length')?) | '.length') #arrayExpression
