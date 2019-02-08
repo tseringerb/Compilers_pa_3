@@ -13,11 +13,12 @@ public class Instruction implements Serializable{
 		this.argument = argument;
 	}
 	
-	private HashMap<Integer, String> codeToOpNameList = new HashMap<>();
+	private HashMap<Integer, String> codeToOpNameList = null;
 	private void codeToOpNameInit(){
-		codeToOpNameList.put(1, "ILOAD");
+		codeToOpNameList = new HashMap<>();
+		codeToOpNameList.put(1, "ILOAD #");
 		codeToOpNameList.put(2, "ICONST");
-		codeToOpNameList.put(3, "ISTORE");
+		codeToOpNameList.put(3, "ISTORE #");
 		codeToOpNameList.put(4, "IADD");
 		codeToOpNameList.put(5, "ISUB");
 		codeToOpNameList.put(6, "IMUL");
@@ -35,8 +36,13 @@ public class Instruction implements Serializable{
 		codeToOpNameList.put(18, "STOP");
 	}
 	 private String getOpName(int code){
+		 if(codeToOpNameList == null){
+			 codeToOpNameInit();
+		 }
 		 return codeToOpNameList.get(code);
 	 }
+	 
+	 enum codeToOp{}
 
 	public int getCode() {
 		return code;
@@ -62,7 +68,10 @@ public class Instruction implements Serializable{
 
 
 	public void print(){
-		System.out.printf("Instuction: code(\"%s\") %d, argument: %s/n", code, /*getOpName(code),*/ argument);
+		if(argument == null){
+			argument = "";
+		}
+		System.out.println(getOpName(code) + " " + argument);
 	}
 		
 }

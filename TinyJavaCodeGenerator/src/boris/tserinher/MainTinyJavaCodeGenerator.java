@@ -38,6 +38,8 @@ public class MainTinyJavaCodeGenerator {
 		CodeGenerationVisitor cgv = new CodeGenerationVisitor(miniJavaSymbolTable);
 		cgv.visit(tree);
 		
+		cgv.getClassFile().print();
+		
 	}
 
 }

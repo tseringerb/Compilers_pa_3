@@ -14,7 +14,8 @@ public class ClassFile implements Serializable {
 	
 	public void print(){
 		methodsList.forEach((methodName, method) -> {
-			System.out.printf("Method Name: %s%n", methodName);
+			System.out.printf("%s%n", methodName);
+			method.print();
 		});
 	}
 

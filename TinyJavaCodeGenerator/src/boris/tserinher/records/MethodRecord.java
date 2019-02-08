@@ -32,4 +32,9 @@ public class MethodRecord extends Record {
 		});
 		return locals;
 	}
+	
+	/*public String getId(){
+		return null;
+		
+	}*/
 }

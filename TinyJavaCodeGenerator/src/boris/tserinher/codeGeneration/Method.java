@@ -27,18 +27,22 @@ public class Method {
 		variablesList.get(index).setValue(value);
 	} 
 	
-	public void addInstruction(Instruction instruction){
+	/*public void addInstruction(Instruction instruction){
 		instructions.add(instruction);
-	}
+		System.out.println("ADD INSTR " + instructions.size());
+	}*/
 	
 	public int getCurrentInstructionIndex(){
-		return instructions.size() - 1;	
+		//System.out.println("!!!!!!!!!!!!");
+		//System.out.println(instructions);
+		//System.out.println(this.programCounter);
+		return instructions.size();	
 	}
 	
 	public void addVariablesList(List<String> variableIdList){ // переносим переменные методов из таблицы 
 		variableIdList.forEach((variableId)->{ // в список переменных метода в кодогенерации
 			variablesList.add(new Variable(variableId));
-			System.out.println(variableId);
+			//System.out.println(variableId);
 		});
 		
 		for(int index = 0; index < variableIdList.size(); index++){
@@ -82,18 +86,28 @@ public class Method {
 	}
 	
 	public void print(){
-		variablesList.forEach((variable)->{
-			System.out.printf("index%d id%s value%d", variablesList.indexOf(variable), variable.id, variable.value);
-		});//TODO
+		instructions.forEach((instruction)->{
+			System.out.print(instructions.indexOf(instruction) + " ");
+			instruction.print();
+		});
 	}
 
 	public int getIndexOf(String lhs) {	
 		return nameToIndex.get(lhs);
 	}
 
-	public void addInstruction(int iCode, int argument) {
+	public void addInstruction(int iCode, Object argument) {
 		Instruction instruction = new Instruction(iCode, argument);
 		instructions.add(instruction);	
+		programCounter++;
+		//System.out.println(programCounter);
+		//System.out.println("ADD INSTR " + instructions.size() + " ICode " + iCode);
+
+	}
+
+	public Instruction getInstruction(int instuctionIndex) {
+		Instruction instruction = instructions.get(instuctionIndex);
+		return instruction;
 	}
 	
 }
