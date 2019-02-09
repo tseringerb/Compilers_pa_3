@@ -30,8 +30,8 @@ mainMethod : 'public' 'static' 'void' 'main' '(' 'String'('...' | '[' ']') ID ')
 
 mainMethodBody : statement;
 
-statement:   variableDeclarationStatement
-	| assignmentStatement 
+statement:   //variableDeclarationStatement
+	assignmentStatement 
 	| ifStatment 
 	| whileStatement 
 	| doWhileStatement 
@@ -41,7 +41,7 @@ statement:   variableDeclarationStatement
 	| breakeStatement
 	| continueStatement;
 
-variableDeclarationStatement: type ID ('=' expression)? SC;
+//variableDeclarationStatement: type ID ('=' expression)? SC;
 
 assignmentStatement: type? ID '=' expression SC;
 
@@ -72,7 +72,7 @@ intArrayType: 'int[]';
 identifierType: ID;
 
 expression :  rBExpr #roundBracketxpression
-| THIS #thosExpression
+| THIS #thisExpression
 | expression '.' ID ('('methodInvocation?')' | '()')* #methodCallExpression
 | '!' expression #notExpression
 | expression MULT expression #multExpression
@@ -83,7 +83,8 @@ expression :  rBExpr #roundBracketxpression
 | expression '==' expression #equalExpression
 | expression '&&' expression #andExpression
 | expression '||' expression #orExpression
-| (MINUS | PLUS)? (INT | ID) #prePlusMinusExpression
+| (MINUS | PLUS)? INT #prePlusMinusIntegerExpression
+| ID #IDExpression
 | 'new' ID '()' #newObjectExpression
 | BOOLEAN #boolTypeExpression
 | expression (('[' expression ']'('.length')?) | '.length') #arrayExpression
