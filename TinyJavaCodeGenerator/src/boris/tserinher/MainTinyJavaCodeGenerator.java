@@ -1,6 +1,8 @@
 package boris.tserinher;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import org.antlr.v4.gui.Trees;
 import org.antlr.v4.runtime.ANTLRFileStream;
@@ -15,6 +17,16 @@ public class MainTinyJavaCodeGenerator {
 
 	public static void main(String[] args) {
 		String testProgram = args[0];
+		
+		
+		String delimetr = "\\\\";
+		String[] subSrings = testProgram.split(delimetr);
+		int subStringIndex = subSrings.length - 1;
+		String subString = subSrings[subStringIndex];
+		String outputFileName = subString.substring(0, subString.indexOf("."));
+		//System.out.println("!!!! " + outputFileName);
+		
+		
 		
 		MiniJavaGrammarLexer lexer = null;
 		try {
@@ -39,6 +51,13 @@ public class MainTinyJavaCodeGenerator {
 		cgv.visit(tree);
 		
 		cgv.getClassFile().print();
+		
+		try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(outputFileName + ".tjc"))) {
+			objectOutputStream.writeObject(cgv.getClassFile());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

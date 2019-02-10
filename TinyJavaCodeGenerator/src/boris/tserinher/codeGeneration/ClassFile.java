@@ -2,10 +2,11 @@ package boris.tserinher.codeGeneration;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ClassFile implements Serializable {
 	
-	private HashMap<String, Method> methodsList = new HashMap<>();
+	private HashMap<String, Method> methodsList = new LinkedHashMap<>();
 	
 	public Method addMethod(String methodName/*, Method method*/){
 		methodsList.put(methodName, new Method());

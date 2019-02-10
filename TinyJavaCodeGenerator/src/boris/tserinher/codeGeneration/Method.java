@@ -1,5 +1,6 @@
 package boris.tserinher.codeGeneration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,9 +8,10 @@ import java.util.Map;
 
 
 
+
 import boris.tserinher.instructions.Instruction;
 
-public class Method {
+public class Method implements Serializable{
 	private List<Variable> variablesList = new ArrayList<>();
 	private List<Instruction> instructions = new ArrayList<>();
 	
@@ -58,7 +60,7 @@ public class Method {
 			});
 	}
 
-	private class Variable{
+	private class Variable implements Serializable{
 		
 		//private int index;
 		private String id;
