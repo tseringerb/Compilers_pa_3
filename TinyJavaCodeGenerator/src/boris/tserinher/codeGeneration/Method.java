@@ -12,6 +12,8 @@ import java.util.Map;
 import boris.tserinher.instructions.Instruction;
 
 public class Method implements Serializable{
+	private static final long serialVersionUID = 1233078063705867350L;
+
 	private List<Variable> variablesList = new ArrayList<>();
 	private List<Instruction> instructions = new ArrayList<>();
 	
@@ -62,7 +64,8 @@ public class Method implements Serializable{
 
 	private class Variable implements Serializable{
 		
-		//private int index;
+		private static final long serialVersionUID = -6873529997583407627L;
+		
 		private String id;
 		private int value;
 		

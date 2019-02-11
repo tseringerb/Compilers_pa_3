@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 
 public class ClassFile implements Serializable {
 	
+	private static final long serialVersionUID = -3239548327256764892L;
+	
 	private HashMap<String, Method> methodsList = new LinkedHashMap<>();
 	
 	public Method addMethod(String methodName/*, Method method*/){
