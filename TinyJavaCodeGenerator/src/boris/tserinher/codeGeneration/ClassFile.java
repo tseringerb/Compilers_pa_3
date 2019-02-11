@@ -23,8 +23,7 @@ public class ClassFile implements Serializable {
 	}
 
 	public Method getMethod(String nameMethod) {
-		// TODO Auto-generated method stub
-		return null;
+		return methodsList.get(nameMethod);
 	}
 	
 	

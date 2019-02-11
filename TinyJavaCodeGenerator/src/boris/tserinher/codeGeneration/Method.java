@@ -9,6 +9,7 @@ import java.util.Map;
 
 
 
+
 import boris.tserinher.instructions.Instruction;
 
 public class Method implements Serializable{
@@ -19,7 +20,7 @@ public class Method implements Serializable{
 	
 	private Map<String, Integer> nameToIndex = new HashMap<>();
 	
-	private int programCounter = 0; //next instruction to be executed
+	private transient int programCounter = 0; //next instruction to be executed
 	
 	public void addVariable(Variable variable){
 		//variable.index = variablesList.size() + 1;
@@ -60,6 +61,30 @@ public class Method implements Serializable{
 		variablesList.forEach((variable)->{
 			System.out.println(variable.id);
 			});
+	}
+	
+	public void printInstuctionList(){
+		System.out.println("INSTRUCTION LIST ");
+		instructions.forEach((instruction)->{
+			System.out.println(instruction);
+		});
+	}
+	
+	public Instruction nextInstruction(){
+		//TODO
+		Instruction instruction = null;
+		instruction = instructions.get(programCounter);
+		System.out.println("INSTR " + instruction.getCode() + " INSTR ARG " + instruction.getArgument() + " PC " + programCounter);
+		programCounter++;
+		return instruction;
+	}
+	
+	public int getProgramCounter(){
+		return programCounter;
+	}
+	
+	public void setProgramCounter(){
+		programCounter = 0;
 	}
 
 	private class Variable implements Serializable{
@@ -104,7 +129,7 @@ public class Method implements Serializable{
 	public void addInstruction(int iCode, Object argument) {
 		Instruction instruction = new Instruction(iCode, argument);
 		instructions.add(instruction);	
-		programCounter++;
+		//programCounter++;
 		//System.out.println(programCounter);
 		//System.out.println("ADD INSTR " + instructions.size() + " ICode " + iCode);
 
@@ -113,6 +138,16 @@ public class Method implements Serializable{
 	public Instruction getInstruction(int instuctionIndex) {
 		Instruction instruction = instructions.get(instuctionIndex);
 		return instruction;
+	}
+
+	public void setProgramCounter(int arg) {
+		programCounter = arg;
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public int getVariableValue(int index){
+		return variablesList.get(index).getValue();
 	}
 	
 }

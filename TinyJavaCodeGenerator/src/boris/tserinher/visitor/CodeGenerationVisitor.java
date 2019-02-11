@@ -195,7 +195,11 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> im
 		String containingClass = ctx.getChild(0).getText();
 		if(containingClass.equals("this")){
 			containingClass = currentClass;
+		} else if(ctx.getChild(0).getChildCount() > 1) { 
+			containingClass = ctx.getChild(0).getChild(1).getText();
+
 		}
+		//else if(ctx.getChild(0).getText())
 		//currentMethod.addInstruction(INVOKEVIRTUAL, /*crec.getID() + "." + mrec.getID()*/);
 		//MethodRecord mrec = (MethodRecord) symtab.lookup(ctx.getChild(2).getText());
 		//MethodRecord mrec = ... a bit of work // Target method

@@ -24,7 +24,6 @@ public class MainTinyJavaCodeGenerator {
 		int subStringIndex = subSrings.length - 1;
 		String subString = subSrings[subStringIndex];
 		String outputFileName = subString.substring(0, subString.indexOf("."));
-		//System.out.println("!!!! " + outputFileName);
 		
 		
 		
@@ -52,8 +51,9 @@ public class MainTinyJavaCodeGenerator {
 		
 		cgv.getClassFile().print();
 		
-		try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(outputFileName + ".tjc"))) {
+		try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("C:\\EclipseLuna\\PA_3\\TinyJavaCodeGenerator\\" + outputFileName + ".tjc"))) {
 			objectOutputStream.writeObject(cgv.getClassFile());
+			System.out.println("DONE");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
