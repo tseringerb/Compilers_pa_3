@@ -343,8 +343,8 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> im
 	public Record visitMethodInvocation(MethodInvocationContext ctx) {
 		int paramentrsCount = ctx.getChildCount();
 		//System.out.println("METHOD INVOCATION " + ctx.getText() + " " + paramentrsCount);
-		for(int i = paramentrsCount - 1; i >= 0; i -= 2){
-			 visit(ctx.getChild(i));
+		for(int i = 0; i < paramentrsCount; i += 2){
+			visit(ctx.getChild(i));
 		}
 		return null;
 	}

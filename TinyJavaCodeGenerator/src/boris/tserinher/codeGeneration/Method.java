@@ -72,6 +72,7 @@ public class Method implements Serializable{
 	
 	public Instruction nextInstruction(){
 		//TODO
+		System.out.println("nextInstr " + programCounter);
 		Instruction instruction = null;
 		instruction = instructions.get(programCounter);
 		System.out.println("INSTR " + instruction.getCode() + " INSTR ARG " + instruction.getArgument() + " PC " + programCounter);
@@ -83,7 +84,7 @@ public class Method implements Serializable{
 		return programCounter;
 	}
 	
-	public void setProgramCounter(){
+	public void resetProgramCounter(){
 		programCounter = 0;
 	}
 
@@ -141,8 +142,7 @@ public class Method implements Serializable{
 	}
 
 	public void setProgramCounter(int arg) {
-		programCounter = arg;
-		// TODO Auto-generated method stub
+		this.programCounter = arg;
 		
 	}
 	

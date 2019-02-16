@@ -15,7 +15,7 @@ public class StackMachine implements ICodes{
 	public StackMachine(String fileName){
 		classRepository = new ClassRepository(fileName);
 		this.fileName = fileName;
-		System.out.println("CLASSREP " + classRepository);
+		//System.out.println("CLASSREP " + classRepository);
 		
 	}
 	
@@ -40,13 +40,19 @@ public class StackMachine implements ICodes{
 		//TODO
 		String mainMethodClassName = onlyNameOfFile(fileName);
 		currentMethodActivation = classRepository.getMethod(mainMethodClassName + ".main");
-		System.out.println("CURRENT METHOD " + currentMethodActivation);
+		//System.out.println("CURRENT METHOD " + currentMethodActivation);
 		//currentMethodActivation.setProgramCounter();
+		
 		while (code != STOP ) {
-			System.out.println("PROG COUNT " + currentMethodActivation.getProgramCounter());
+			//System.out.println("PROG COUNT " + currentMethodActivation.getProgramCounter());
 			instruction = currentMethodActivation.nextInstruction();
 			code = instruction.getCode();
 			Object arg = instruction.getArgument();
+			System.out.println("DATASTACK");
+			dataStack.forEach((data)->{
+				System.out.println(data);
+			});
+			
 			switch (code){
 			case ICONST: // push integer value arg
 				dataStack.push((Integer) arg);
@@ -57,13 +63,15 @@ public class StackMachine implements ICodes{
 				dataStack.push(variable1 + variable2);
 			break;
 			case GOTO: // pc = arg
-				System.out.println("GOTO");
+				//System.out.println("GOTO");
 				currentMethodActivation.setProgramCounter((int) arg);
 			break;
 			case IFFALSE: // v = pop(), let pc = arg if v=0
-				System.out.println("IFFALSE");
-			if (dataStack.pop() == 0)
+				int temp = dataStack.pop();
+				System.out.println("IFFALSE " + temp);
+			if (temp == 0){
 				currentMethodActivation.setProgramCounter((int)arg);
+			}
 			break;
 			case ILOAD: 
 				variable1 = currentMethodActivation.getVariableValue((int)arg);		//Push integer value stored in local variable n.
@@ -76,7 +84,7 @@ public class StackMachine implements ICodes{
 			case ISUB:
 				variable1 = dataStack.pop();
 				variable2 = dataStack.pop();
-				dataStack.push(variable1 - variable2);
+				dataStack.push(variable2 - variable1);
 				break;
 			case IMUL:
 				variable1 = dataStack.pop();
@@ -91,10 +99,13 @@ public class StackMachine implements ICodes{
 			case ILT: //Pop value v1, Pop value v2, Push 1 if v2 < v1 else Push 0.
 				variable1 = dataStack.pop();
 				variable2 = dataStack.pop();
+				System.out.print(variable1 + " < " + variable2 + " ");
 				if(variable2 < variable1){
 					dataStack.push(1);
+					System.out.println("false");
 				} else {
 					dataStack.push(0);
+					System.out.println("true");
 				}
 				break;
 			case IEQ: //Pop value v1, Pop value v2, Push 1 if v1 = v2 else Push 0.
@@ -126,6 +137,7 @@ public class StackMachine implements ICodes{
 				break;
 			case INOT: //Pop value v, Push 1 if v = 0 else Push 0.
 				variable1 = dataStack.pop();
+				System.out.println("INOT " + variable1);
 				if(variable1 == 0){
 					dataStack.push(1);
 				}else {
@@ -135,20 +147,33 @@ public class StackMachine implements ICodes{
 			case INVOKEVIRTUAL: //Push current activation and switch to the method having qualified name m.
 				System.out.println("INVOKE " + arg);
 				activationStack.push(currentMethodActivation);
-				currentMethodActivation = classRepository.getMethod((String)arg);
-				System.out.println(currentMethodActivation);
+				System.out.println("Begin " + currentMethodActivation.getProgramCounter());
+				Method newMethodActivation = classRepository.getMethod((String)arg);
+				newMethodActivation.resetProgramCounter();
+				currentMethodActivation = newMethodActivation;
+				System.out.println("End " + currentMethodActivation.getProgramCounter());
+				//System.out.println(currentMethodActivation);
 				activationStack.forEach(method -> {
 					System.out.println("STACK METHOD PUSH " + method);
 				});
 				break;
 			case IRETURN: //Pop activation and continue.
+				System.out.println("RETURN");
+				//System.out.println("BEGING RETURN " + currentMethodActivation);
+				/*activationStack.forEach((method)->{
+					System.out.println("STACK MEHTOD FOREACH " +  method);
+				});*/
+				//activationStack.pop();
+				System.out.println("Begin return " + currentMethodActivation.getProgramCounter());
 				currentMethodActivation = activationStack.pop();
-				System.out.println("RETURN " + currentMethodActivation);
-				activationStack.forEach(method -> {
-					System.out.println("STACK METHOD POP " + method);
-				});
+				System.out.println("End return " + currentMethodActivation.getProgramCounter());
+				//System.out.println("RETURN END " + currentMethodActivation);
+				/*activationStack.forEach(method -> {
+					System.out.println("STACK METHOD POP " + method.getProgramCounter());
+				});*/
 				break;
 			case PRINT: //Pop value and print.
+				System.out.println("PRINT");
 				System.out.println(dataStack.pop());
 				break;
 			case STOP: 
