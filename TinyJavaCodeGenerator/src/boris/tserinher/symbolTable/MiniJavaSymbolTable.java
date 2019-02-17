@@ -68,7 +68,7 @@ public class MiniJavaSymbolTable implements SymbolTable {
 
 	@Override
 	public Record lookup(String id) {
-		//System.out.println("Method lookup " + currentScope.scopeName + " " + currentScope.scopeType);
+		System.out.println("Method lookup " + currentScope.scopeName + " " + currentScope.scopeType);
 		return currentScope.lookup(id);
 	}
 	
@@ -115,16 +115,14 @@ public class MiniJavaSymbolTable implements SymbolTable {
 			else //Child exists
 			nextChild = (Scope) scopeChildrenList.get(next); // ==> visit child
 			next++;
-			//System.out.println("NEXT CHILD " + nextChild.scopeName);
+			System.out.println("NEXT CHILD " + nextChild.scopeName);
 			return nextChild;
 		}
 		
 		public HashMap<String, Record> getRecords(){
 			return records;
 		}
-		
-		
-		
+			
 		public Record lookup(String id) {
 			//System.out.println("Record method Lookup");
 			//System.out.println("RECORDS " + records.size());

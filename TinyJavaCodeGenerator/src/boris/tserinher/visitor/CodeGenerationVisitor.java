@@ -93,6 +93,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> im
 		String currentMethodName = ctx.getChild(1).getText(); //Method name
 		
 		symtab.enterScope(); //TODO !!!! это костыль, потому что я не понимаю почему при вызове enterScope в классах мы не заходим в нижний Scope 
+		System.out.println("!!! " + currentMethodName);
 		MethodRecord mrec = (MethodRecord)symtab.lookup(currentMethodName);
 		//System.out.println(mrec);
 		currentMethod = classFile.addMethod(currentClass + "." + currentMethodName); // New Method!

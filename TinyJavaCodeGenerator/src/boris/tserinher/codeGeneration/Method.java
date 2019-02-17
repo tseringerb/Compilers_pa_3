@@ -22,8 +22,17 @@ public class Method implements Serializable{
 	
 	private transient int programCounter = 0; //next instruction to be executed
 	
+	public Method(Method copyMethod){
+		this.variablesList = copyMethod.variablesList;
+		this.instructions = copyMethod.instructions;
+		this.nameToIndex = copyMethod.nameToIndex;
+	}
+	
+	public Method() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void addVariable(Variable variable){
-		//variable.index = variablesList.size() + 1;
 		variablesList.add(variable);
 		nameToIndex.put(variable.id, variablesList.indexOf(variable));
 	}
@@ -32,15 +41,7 @@ public class Method implements Serializable{
 		variablesList.get(index).setValue(value);
 	} 
 	
-	/*public void addInstruction(Instruction instruction){
-		instructions.add(instruction);
-		System.out.println("ADD INSTR " + instructions.size());
-	}*/
-	
 	public int getCurrentInstructionIndex(){
-		//System.out.println("!!!!!!!!!!!!");
-		//System.out.println(instructions);
-		//System.out.println(this.programCounter);
 		return instructions.size();	
 	}
 	
@@ -72,11 +73,15 @@ public class Method implements Serializable{
 	
 	public Instruction nextInstruction(){
 		//TODO
-		System.out.println("nextInstr " + programCounter);
+		//System.out.println("nextInstr " + programCounter);
 		Instruction instruction = null;
 		instruction = instructions.get(programCounter);
-		System.out.println("INSTR " + instruction.getCode() + " INSTR ARG " + instruction.getArgument() + " PC " + programCounter);
+		//System.out.println("INSTR " + instruction.getCode() + " INSTR ARG " + instruction.getArgument() + " PC " + programCounter);
 		programCounter++;
+		if(instructions.size() - 1 > programCounter){
+			//System.out.println("NEXT INSTRUCTION " + instructions.size() + " " + programCounter);
+			//programCounter++;
+		}
 		return instruction;
 	}
 	
@@ -88,7 +93,41 @@ public class Method implements Serializable{
 		programCounter = 0;
 	}
 
-	private class Variable implements Serializable{
+	public void addInstruction(int iCode, Object argument) {
+		Instruction instruction = new Instruction(iCode, argument);
+		instructions.add(instruction);	
+	}
+
+	public Instruction getInstruction(int instuctionIndex) {
+		Instruction instruction = instructions.get(instuctionIndex);
+		return instruction;
+	}
+
+	public void setProgramCounter(int arg) {
+		this.programCounter = arg;
+		
+	}
+	
+	public int getVariableValue(int index){
+		return variablesList.get(index).getValue();
+	}
+	
+	public String getNameOfVariable(int index){
+		return variablesList.get(index).getId();	
+	}
+	
+	public void print(){
+		instructions.forEach((instruction)->{
+			System.out.print(instructions.indexOf(instruction) + " ");
+			instruction.print();
+		});
+	}
+
+	public int getIndexOf(String lhs) {	
+		return nameToIndex.get(lhs);
+	}
+	
+private class Variable implements Serializable{
 		
 		private static final long serialVersionUID = -6873529997583407627L;
 		
@@ -105,7 +144,15 @@ public class Method implements Serializable{
 			super();
 			this.id = id;
 		}
-		
+			
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
 		public int getValue() {
 			return value;
 		}
@@ -116,38 +163,6 @@ public class Method implements Serializable{
 		
 	}
 	
-	public void print(){
-		instructions.forEach((instruction)->{
-			System.out.print(instructions.indexOf(instruction) + " ");
-			instruction.print();
-		});
-	}
-
-	public int getIndexOf(String lhs) {	
-		return nameToIndex.get(lhs);
-	}
-
-	public void addInstruction(int iCode, Object argument) {
-		Instruction instruction = new Instruction(iCode, argument);
-		instructions.add(instruction);	
-		//programCounter++;
-		//System.out.println(programCounter);
-		//System.out.println("ADD INSTR " + instructions.size() + " ICode " + iCode);
-
-	}
-
-	public Instruction getInstruction(int instuctionIndex) {
-		Instruction instruction = instructions.get(instuctionIndex);
-		return instruction;
-	}
-
-	public void setProgramCounter(int arg) {
-		this.programCounter = arg;
-		
-	}
 	
-	public int getVariableValue(int index){
-		return variablesList.get(index).getValue();
-	}
 	
 }
