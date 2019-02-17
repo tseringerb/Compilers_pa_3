@@ -40,6 +40,7 @@ public class StackMachine implements ICodes{
 		//TODO
 		String mainMethodClassName = onlyNameOfFile(fileName);
 		currentMethodActivation = classRepository.getMethod(mainMethodClassName + ".main");
+		Method invokeMethod = null;
 		//System.out.println("CURRENT METHOD " + currentMethodActivation);
 		//currentMethodActivation.setProgramCounter();
 		
@@ -78,7 +79,7 @@ public class StackMachine implements ICodes{
 			case ILOAD: 
 				variable1 = currentMethodActivation.getVariableValue((int)arg);		//Push integer value stored in local variable n.
 				dataStack.push(variable1);
-				System.out.println("LOAD " + currentMethodActivation.getNameOfVariable((int) arg));
+				System.out.println("LOAD " + currentMethodActivation.getNameOfVariable((int) arg) + " " + "#" + arg);
 				break;
 			case ISTORE:
 				int value = dataStack.pop();
@@ -166,9 +167,14 @@ public class StackMachine implements ICodes{
 				//TODO
 				System.out.println("INVOKE " + arg);
 				activationStack.push(currentMethodActivation);
-				Method newMethodActivation = classRepository.getMethod((String)arg);
-				newMethodActivation.resetProgramCounter();
-				currentMethodActivation = newMethodActivation;
+				if(currentMethodActivation == classRepository.getMethod((String)arg) || currentMethodActivation == invokeMethod){
+					invokeMethod = new Method(currentMethodActivation);
+					currentMethodActivation = invokeMethod;
+					System.out.println("NEW METHOD " + currentMethodActivation.getVariableValue(0));
+				} else {
+					currentMethodActivation = classRepository.getMethod((String)arg);
+					System.out.println("OLD METHOD " + currentMethodActivation.getVariableValue(0));
+				}
 				break;
 			case IRETURN: //Pop activation and continue.
 				currentMethodActivation = activationStack.pop();

@@ -31,7 +31,7 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 	public void enterProgram(ProgramContext ctx) {
 		symbolTable.setCurrentScopeType("program");
 		symbolTable.setCurrentScopeName("program");
-//		symbolTable.enterScope();
+		symbolTable.enterScope();
 		super.enterProgram(ctx);
 	}
 	
