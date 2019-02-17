@@ -1,5 +1,6 @@
 package boris.tserinher.codeGeneration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,15 +8,19 @@ import java.util.Map;
 
 
 
+
+
 import boris.tserinher.instructions.Instruction;
 
-public class Method {
+public class Method implements Serializable{
+	private static final long serialVersionUID = 1233078063705867350L;
+
 	private List<Variable> variablesList = new ArrayList<>();
 	private List<Instruction> instructions = new ArrayList<>();
 	
 	private Map<String, Integer> nameToIndex = new HashMap<>();
 	
-	private int programCounter = 0; //next instruction to be executed
+	private transient int programCounter = 0; //next instruction to be executed
 	
 	public void addVariable(Variable variable){
 		//variable.index = variablesList.size() + 1;
@@ -57,10 +62,36 @@ public class Method {
 			System.out.println(variable.id);
 			});
 	}
+	
+	public void printInstuctionList(){
+		System.out.println("INSTRUCTION LIST ");
+		instructions.forEach((instruction)->{
+			System.out.println(instruction);
+		});
+	}
+	
+	public Instruction nextInstruction(){
+		//TODO
+		System.out.println("nextInstr " + programCounter);
+		Instruction instruction = null;
+		instruction = instructions.get(programCounter);
+		System.out.println("INSTR " + instruction.getCode() + " INSTR ARG " + instruction.getArgument() + " PC " + programCounter);
+		programCounter++;
+		return instruction;
+	}
+	
+	public int getProgramCounter(){
+		return programCounter;
+	}
+	
+	public void resetProgramCounter(){
+		programCounter = 0;
+	}
 
-	private class Variable{
+	private class Variable implements Serializable{
 		
-		//private int index;
+		private static final long serialVersionUID = -6873529997583407627L;
+		
 		private String id;
 		private int value;
 		
@@ -99,7 +130,7 @@ public class Method {
 	public void addInstruction(int iCode, Object argument) {
 		Instruction instruction = new Instruction(iCode, argument);
 		instructions.add(instruction);	
-		programCounter++;
+		//programCounter++;
 		//System.out.println(programCounter);
 		//System.out.println("ADD INSTR " + instructions.size() + " ICode " + iCode);
 
@@ -108,6 +139,15 @@ public class Method {
 	public Instruction getInstruction(int instuctionIndex) {
 		Instruction instruction = instructions.get(instuctionIndex);
 		return instruction;
+	}
+
+	public void setProgramCounter(int arg) {
+		this.programCounter = arg;
+		
+	}
+	
+	public int getVariableValue(int index){
+		return variablesList.get(index).getValue();
 	}
 	
 }

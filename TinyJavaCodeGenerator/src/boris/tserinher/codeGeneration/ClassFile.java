@@ -2,10 +2,13 @@ package boris.tserinher.codeGeneration;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ClassFile implements Serializable {
 	
-	private HashMap<String, Method> methodsList = new HashMap<>();
+	private static final long serialVersionUID = -3239548327256764892L;
+	
+	private HashMap<String, Method> methodsList = new LinkedHashMap<>();
 	
 	public Method addMethod(String methodName/*, Method method*/){
 		methodsList.put(methodName, new Method());
@@ -20,8 +23,7 @@ public class ClassFile implements Serializable {
 	}
 
 	public Method getMethod(String nameMethod) {
-		// TODO Auto-generated method stub
-		return null;
+		return methodsList.get(nameMethod);
 	}
 	
 	
