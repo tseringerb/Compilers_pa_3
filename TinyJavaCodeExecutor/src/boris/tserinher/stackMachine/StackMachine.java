@@ -107,13 +107,13 @@ public class StackMachine implements ICodes{
 			case ILT: //Pop value v1, Pop value v2, Push 1 if v2 < v1 else Push 0.
 				variable1 = dataStack.pop();
 				variable2 = dataStack.pop();
-				System.out.print(variable1 + " < " + variable2 + " ");
+				System.out.print(variable2 + " < " + variable1 + " ");
 				if(variable2 < variable1){
 					dataStack.push(1);
-					System.out.println("false");
+					System.out.println("true");
 				} else {
 					dataStack.push(0);
-					System.out.println("true");
+					System.out.println("false");
 				}
 				break;
 			case IEQ: //Pop value v1, Pop value v2, Push 1 if v1 = v2 else Push 0.

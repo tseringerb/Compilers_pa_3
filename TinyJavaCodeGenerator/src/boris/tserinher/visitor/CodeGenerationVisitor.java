@@ -310,6 +310,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> im
 		//System.out.println("WHILE_STATEMENT " + ctx.getText());
 		//System.out.println(currentMethod.getCurrentInstructionIndex());
 		//System.out.println("Condition " + ctx.getChild(1).getChild(1).getText());
+		int whileLabel = currentMethod.getCurrentInstructionIndex();
 		visit(ctx.getChild(1).getChild(1)); // Generate condition
 		
 		int iflabel = currentMethod.getCurrentInstructionIndex(); // Save IF-number
@@ -323,7 +324,8 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> im
 		int gotolabel = currentMethod.getCurrentInstructionIndex(); // Save GOTO-number
 		currentMethod.addInstruction(GOTO,null);
 		instruction = currentMethod.getInstruction(gotolabel);
-		instruction.setArgument(currentMethod.getCurrentInstructionIndex());// Update GOTO
+		//instruction.setArgument(currentMethod.getCurrentInstructionIndex());// Update GOTO
+		instruction.setArgument(whileLabel);// Update GOTO
 		//System.out.println("GOTO -> " + gotolabel + " " + currentMethod.getCurrentInstructionIndex());
 		return null;
 	}
