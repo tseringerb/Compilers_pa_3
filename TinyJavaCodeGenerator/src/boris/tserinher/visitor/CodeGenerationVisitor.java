@@ -91,9 +91,11 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> im
 	public Record visitMethod(MethodContext ctx) {
 		//System.out.println("VISIT_METHOD_METHOD: " + ctx.getChild(1).getText());
 		String currentMethodName = ctx.getChild(1).getText(); //Method name
+		System.out.println("Visit Method " + currentMethodName);
+		System.out.println(symtab.getCurrentScopeName());
 		
-		symtab.enterScope(); //TODO !!!! это костыль, потому что я не понимаю почему при вызове enterScope в классах мы не заходим в нижний Scope 
-		System.out.println("!!! " + currentMethodName);
+		//symtab.enterScope(); //TODO !!!! это костыль, потому что я не понимаю почему при вызове enterScope в классах мы не заходим в нижний Scope 
+		//System.out.println("!!! " + currentMethodName);
 		MethodRecord mrec = (MethodRecord)symtab.lookup(currentMethodName);
 		//System.out.println(mrec);
 		currentMethod = classFile.addMethod(currentClass + "." + currentMethodName); // New Method!
@@ -104,7 +106,7 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> im
 		//System.out.println("~!!!~" + ctx.getChild(3).getText());
 		visit(ctx.getChild(6)); // generate MethodBody code
 		 
-		symtab.exitScope();
+		//symtab.exitScope();
 		return null; //super.visitMethod(ctx);
 	}
 	@Override
@@ -292,9 +294,9 @@ public class CodeGenerationVisitor extends MiniJavaGrammarBaseVisitor<Record> im
 	public Record visitMainMethod(MainMethodContext ctx) {
 		String currentMethodName = ctx.getChild(3).getText();
 		currentMethod = classFile.addMethod(currentClass + "." + currentMethodName);
-		symtab.enterScope();
+		//symtab.enterScope();
 		visit(ctx.getChild(11));
-		symtab.exitScope();
+		//symtab.exitScope();
 		return null; 
 	}
 	@Override

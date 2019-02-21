@@ -115,7 +115,6 @@ public class MiniJavaSymbolTable implements SymbolTable {
 			else //Child exists
 			nextChild = (Scope) scopeChildrenList.get(next); // ==> visit child
 			next++;
-			System.out.println("NEXT CHILD " + nextChild.scopeName);
 			return nextChild;
 		}
 		

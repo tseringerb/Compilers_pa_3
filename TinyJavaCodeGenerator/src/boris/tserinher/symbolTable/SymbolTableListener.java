@@ -29,9 +29,10 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 
 	@Override
 	public void enterProgram(ProgramContext ctx) {
+		symbolTable.enterScope();
 		symbolTable.setCurrentScopeType("program");
 		symbolTable.setCurrentScopeName("program");
-		symbolTable.enterScope();
+		//symbolTable.enterScope();
 		super.enterProgram(ctx);
 	}
 	
@@ -47,10 +48,11 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		String type = ctx.getChild(0).toString();
 		
 		currentClass = new ClassRecord(id, type);
+		symbolTable.putRecord(id, currentClass);
 		symbolTable.enterScope();
 		symbolTable.setCurrentScopeType(type);
 		symbolTable.setCurrentScopeName(id);
-		symbolTable.putRecord(id, currentClass);
+		//symbolTable.putRecord(id, currentClass);
 		super.enterMainClass(ctx);
 	}
 
@@ -67,10 +69,11 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		
 		currentClass = new ClassRecord(id, type);
 		
+		symbolTable.putRecord(id, currentClass);
 		symbolTable.enterScope();
 		symbolTable.setCurrentScopeType(type);
 		symbolTable.setCurrentScopeName(id);
-		symbolTable.putRecord(id, currentClass);
+		//symbolTable.putRecord(id, currentClass);
 		super.enterClassDeclaration(ctx);
 
 	}
@@ -86,12 +89,15 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 		String id = ctx.getChild(3).toString();
 		String type = ctx.getChild(2).toString();
 		
-		symbolTable.enterScope();
-		symbolTable.setCurrentScopeType("method");
+		//symbolTable.enterScope();
+		//symbolTable.setCurrentScopeType("method");
 		
 		currentMethod = new MethodRecord(id, type);
 		currentClass.putMethodRecord(currentMethod);
 		symbolTable.putRecord(id, currentMethod);
+		
+		symbolTable.enterScope();
+		symbolTable.setCurrentScopeType("method");
 		symbolTable.setCurrentScopeName(id);
 		
 		super.enterMainMethod(ctx);
@@ -107,13 +113,15 @@ public class SymbolTableListener extends MiniJavaGrammarBaseListener {
 	public void enterMethod(MethodContext ctx) {
 		String id = ctx.getChild(1).toString();
 		String type = ctx.getChild(0).getChild(0).getChild(0).toString();
-		symbolTable.enterScope();
-		symbolTable.setCurrentScopeType("method");
+		//symbolTable.enterScope();
+		//symbolTable.setCurrentScopeType("method");
 		
 		currentMethod = new MethodRecord(id, type);
 		currentClass.putMethodRecord(currentMethod);
 		symbolTable.putRecord(id, currentMethod	);
-
+		
+		symbolTable.enterScope();
+		symbolTable.setCurrentScopeType("method");
 		symbolTable.setCurrentScopeName(id);
 		super.enterMethod(ctx);
 	}
